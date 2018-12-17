@@ -2,7 +2,8 @@ import { IDict } from '@cleavera/utils';
 import { Binding, Component, IComponentDefinition, IComponentInstance, IOnRender, Resource, RESOURCE_STORE } from '@getig/core';
 
 @Component({
-    template: '<link href="#{url}" rel="stylesheet">'
+    template: '<link href="#{url}" rel="stylesheet">',
+    isDependant: true
 })
 export class StylesheetComponent implements IOnRender {
     @Binding()

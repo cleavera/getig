@@ -2,7 +2,8 @@ import { IDict } from '@cleavera/utils';
 import { Binding, Component, IComponentDefinition, IComponentInstance, IOnRender, Resource, RESOURCE_STORE } from '@getig/core';
 
 @Component({
-    template: '<script src="#{url}"></script>'
+    template: '<script src="#{url}"></script>',
+    isDependant: true
 })
 export class ScriptsComponent implements IOnRender {
     @Binding()
