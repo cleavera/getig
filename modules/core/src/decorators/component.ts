@@ -1,4 +1,4 @@
-import { $isNull, $stringReplace, Asyncable, Maybe } from '@cleavera/utils';
+import { $isNull, $stringReplace, Asyncable, IDict, Maybe } from '@cleavera/utils';
 import { LOGGER } from '../constants/logger.constant';
 import { IComponentDefinition } from '../interfaces/component-definition.interface';
 import { IComponentDescription } from '../interfaces/component-description.interface';
@@ -136,6 +136,36 @@ Component.getComponents = (componentInstance: IComponentInstance): Array<ICompon
     return dynamicComponents.concat(staticComponents);
 };
 
+Component.getDescendants = (componentInstance: IComponentInstance): Array<IComponentDefinition> => {
+    const components: IDict<IComponentDefinition> = {};
+
+    function _appendChildComponents(parentInstance: IComponentInstance): IDict<IComponentDefinition> {
+        for (const component of Component.getComponents(parentInstance)) {
+            components[component.toString()] = component;
+
+            for (const instance of Component.getInstances(parentInstance, component)) {
+                _appendChildComponents(instance);
+            }
+        }
+
+        return components;
+    }
+
+    _appendChildComponents(componentInstance);
+
+    const out: Array<IComponentDefinition> = [];
+
+    for (const component in components) {
+        if (!components.hasOwnProperty(component)) {
+            continue;
+        }
+
+        out.push(components[component]);
+    }
+
+    return out;
+};
+
 Component.addBinding = (componentDefinition: IComponentDefinition, binding: string): void => {
     const bindings: Array<string> = COMPONENT_METADATA.get(componentDefinition, 'bindings') || [];
 
@@ -156,7 +186,7 @@ Component.addStyles = (componentDefinition: IComponentDefinition, styleDefinitio
     COMPONENT_METADATA.set(componentDefinition, 'styles', styles);
 };
 
-Component.getStyles = (componentDefinition: IComponentDefinition): Array<Asyncable<string>> => {
+Component.getStyles = (componentDefinition: IComponentDefinition): Array<Promise<string>> => {
     return COMPONENT_METADATA.get(componentDefinition, 'styles') || [];
 };
 
@@ -168,7 +198,7 @@ Component.setScripts = (componentDefinition: IComponentDefinition, script: Async
     COMPONENT_METADATA.set(componentDefinition, 'scripts', scripts);
 };
 
-Component.getScripts = (componentDefinition: IComponentDefinition): Array<Asyncable<string>> => {
+Component.getScripts = (componentDefinition: IComponentDefinition): Array<Promise<string>> => {
     return COMPONENT_METADATA.get(componentDefinition, 'scripts') || [];
 };
 
@@ -185,6 +215,7 @@ Component.addInstance = (parentInstance: IComponentInstance, childInstance: ICom
     });
 
     COMPONENT_METADATA.set(parentInstance, 'instances', instances);
+    COMPONENT_METADATA.set(childInstance, 'parent', parentInstance);
 };
 
 Component.getInstances = (parentInstance: IComponentInstance, childDefinition: IComponentDefinition): Array<IComponentInstance> => {
@@ -197,4 +228,8 @@ Component.getInstances = (parentInstance: IComponentInstance, childDefinition: I
 
         return filteredInstances;
     }, []);
+};
+
+Component.getParent = (childInstance: IComponentInstance): Maybe<IComponentInstance> => {
+    return COMPONENT_METADATA.get(childInstance, 'parent');
 };
