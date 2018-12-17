@@ -1,5 +1,4 @@
-import { Asyncable } from '@cleavera/utils';
-import { OneOrMany } from '@cleavera/utils/dist';
+import { Asyncable, OneOrMany } from '@cleavera/utils';
 import { IComponentDefinition } from './component-definition.interface';
 
 export interface IComponentDescription {
