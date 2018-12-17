@@ -6,7 +6,7 @@ import { IComponentInstance } from '../interfaces/component-instance.interface';
 import { IInstanceMapping } from '../interfaces/instance-mapping.interface';
 import { MetaData } from '../services/meta-data';
 
-const COMPONENT_METADATA: typeof MetaData = MetaData;
+const COMPONENT_METADATA: MetaData = new MetaData('Component meta data');
 
 export function Component({ template, styles = [], scripts = [], components = [] }: IComponentDescription): ClassDecorator {
     return (componentDefinition: any): void => { // tslint:disable-line no-any

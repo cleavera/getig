@@ -11,7 +11,7 @@ import { IResource } from '../interfaces/resource.interface';
 import { MetaData } from '../services/meta-data';
 import { Component } from './component';
 
-const MODULE_METADATA: typeof MetaData = MetaData;
+const MODULE_METADATA: MetaData = new MetaData('Module meta data');
 
 export function Module({ path, pages = [], children = [], resources = [] }: IModuleDescription): ClassDecorator {
     return (moduleDefinition: any): void => { // tslint:disable-line no-any
