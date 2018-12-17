@@ -1,12 +1,12 @@
 {
   "name": "@getig/core",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Core module for getig",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "lint": "tslint --project ./tsconfig.json",
-    "prepublish": "npm run lint && npm run build"
+    "prepack": "git clean -X -f -d --exclude=\"!node_modules\" && npm run lint && npm run build"
   },
   "author": "Anthony Cleaver",
   "license": "ISC",
