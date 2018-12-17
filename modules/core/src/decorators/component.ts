@@ -8,7 +8,7 @@ import { MetaData } from '../services/meta-data';
 
 const COMPONENT_METADATA: MetaData = new MetaData('Component meta data');
 
-export function Component({ template, styles = [], scripts = [], components = [] }: IComponentDescription): ClassDecorator {
+export function Component({ template, styles = [], scripts = [], components = [], isDependant = false }: IComponentDescription): ClassDecorator {
     return (componentDefinition: any): void => { // tslint:disable-line no-any
         Component.setTemplate(componentDefinition, template);
 
@@ -31,6 +31,8 @@ export function Component({ template, styles = [], scripts = [], components = []
         components.forEach((component: IComponentDefinition) => {
             Component.addStaticComponent(componentDefinition, component);
         });
+
+        Component.setIsDependant(componentDefinition, isDependant);
     };
 }
 
@@ -116,7 +118,11 @@ Component.getTemplate = async(componentDefinition: IComponentDefinition): Promis
 Component.addStaticComponent = (componentDefinition: IComponentDefinition, component: IComponentDefinition): void => {
     const components: Array<IComponentDefinition> = COMPONENT_METADATA.get(componentDefinition, 'components') || [];
 
-    components.push(component);
+    if (Component.getIsDependant(component)) {
+        components.push(component);
+    } else {
+        components.unshift(component);
+    }
 
     COMPONENT_METADATA.set(componentDefinition, 'components', components);
 };
@@ -232,4 +238,12 @@ Component.getInstances = (parentInstance: IComponentInstance, childDefinition: I
 
 Component.getParent = (childInstance: IComponentInstance): Maybe<IComponentInstance> => {
     return COMPONENT_METADATA.get(childInstance, 'parent');
+};
+
+Component.setIsDependant = (componentDefinition: IComponentDefinition, isDependant: boolean): void => {
+    COMPONENT_METADATA.set(componentDefinition, 'isDependant', isDependant);
+};
+
+Component.getIsDependant = (componentDefinition: IComponentDefinition): boolean => {
+    return COMPONENT_METADATA.get(componentDefinition, 'isDependant') || false;
 };

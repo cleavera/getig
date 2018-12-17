@@ -6,4 +6,5 @@ export interface IComponentDescription {
     styles?: OneOrMany<Asyncable<string>>;
     scripts?: OneOrMany<Asyncable<string>>;
     components?: Array<IComponentDefinition>;
+    isDependant?: boolean;
 }
