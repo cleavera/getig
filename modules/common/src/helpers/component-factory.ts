@@ -1,7 +1,4 @@
-import { Binding } from '../decorators/binding';
-import { Component } from '../decorators/component';
-import { IComponentDefinition } from '../interfaces/component-definition.interface';
-import { IComponentInstance } from '../interfaces/component-instance.interface';
+import { Binding, Component, IComponentDefinition, IComponentInstance } from '@getig/core';
 
 export function $componentFactory(componentDefinition: IComponentDefinition, ...args: Array<unknown>): IComponentDefinition {
     @Component({

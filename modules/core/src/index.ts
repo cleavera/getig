@@ -1,6 +1,5 @@
 export { Page } from './classes/page';
 export { Resource } from './classes/resource';
-export { $componentFactory } from './helpers/component-factory';
 export { RESOURCE_STORE } from './constants/resource-store.constant';
 export { Binding } from './decorators/binding';
 export { Component } from './decorators/component';
