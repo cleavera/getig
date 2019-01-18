@@ -17,6 +17,7 @@
     "typescript": "^3.2.2"
   },
   "dependencies": {
+    "@cleavera/fs": "^1.1.0",
     "@cleavera/utils": "^2.3.0"
   }
 }

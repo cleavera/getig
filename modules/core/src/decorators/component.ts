@@ -1,14 +1,16 @@
 import { $isNull, $stringReplace, Asyncable, IDict, Maybe } from '@cleavera/utils';
 import { LOGGER } from '../constants/logger.constant';
+import { RESOURCE_STORE } from '../constants/resource-store.constant';
 import { IComponentDefinition } from '../interfaces/component-definition.interface';
 import { IComponentDescription } from '../interfaces/component-description.interface';
 import { IComponentInstance } from '../interfaces/component-instance.interface';
 import { IInstanceMapping } from '../interfaces/instance-mapping.interface';
+import { IResource } from '../interfaces/resource.interface';
 import { MetaData } from '../services/meta-data';
 
 const COMPONENT_METADATA: MetaData = new MetaData('Component meta data');
 
-export function Component({ template, styles = [], scripts = [], components = [], isDependant = false }: IComponentDescription): ClassDecorator {
+export function Component({ template, styles = [], scripts = [], components = [], resources = [], isDependant = false }: IComponentDescription): ClassDecorator {
     return (componentDefinition: any): void => { // tslint:disable-line no-any
         Component.setTemplate(componentDefinition, template);
 
@@ -18,6 +20,10 @@ export function Component({ template, styles = [], scripts = [], components = []
 
         if (!Array.isArray(scripts)) {
             scripts = [scripts];
+        }
+
+        if (!Array.isArray(resources)) {
+            resources = [resources];
         }
 
         styles.forEach((style: Asyncable<string>) => {
@@ -30,6 +36,10 @@ export function Component({ template, styles = [], scripts = [], components = []
 
         components.forEach((component: IComponentDefinition) => {
             Component.addStaticComponent(componentDefinition, component);
+        });
+
+        resources.forEach((resource: Asyncable<IResource>): void => {
+            RESOURCE_STORE.addResource(resource);
         });
 
         Component.setIsDependant(componentDefinition, isDependant);

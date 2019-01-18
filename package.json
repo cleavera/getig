@@ -9,8 +9,8 @@
   "author": "Anthony Cleaver",
   "license": "ISC",
   "private": true,
-  "dependencies": {
-    "@cleavera/fs": "^1.1.0",
-    "@cleavera/utils": "^2.2.0"
+  "dependencies": {},
+  "devDependencies": {
+    "@cleavera/config": "^1.0.0"
   }
 }
