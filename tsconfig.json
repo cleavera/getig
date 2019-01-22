@@ -1,3 +1,6 @@
 {
-  "extends": "@cleavera/config/tsconfig.json"
+  "extends": "@cleavera/config/tsconfig.json",
+  "compilerOptions": {
+    "declaration": true
+  }
 }
