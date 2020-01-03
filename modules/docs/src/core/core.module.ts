@@ -7,7 +7,7 @@ import { HomeComponent } from './components/home/home.component';
 @Module({
     path: '/',
     pages: [
-        Page.Create('index.html', new PageComponent('People first style guide', HomeComponent)),
+        Page.Create('index.html', new PageComponent('Getig documentation', HomeComponent)),
         Page.Create('error.html', new PageComponent('Ooops', ErrorComponent))
     ],
     children: [],
