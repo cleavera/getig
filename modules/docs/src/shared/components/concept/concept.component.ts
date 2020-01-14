@@ -3,6 +3,7 @@ import { $componentFactory, DynamicComponent, ProjectionComponent } from '@getig
 import { Binding, Component, IBeforeRender, IComponentDefinition } from '@getig/core';
 import { join } from 'path';
 import { IConceptPage } from '../../interfaces/concept-page.interface';
+import { ModuleNavComponent } from '../module-nav/module-nav.component';
 
 @Component({
     template: $readFile(join(__dirname, './concept.component.html')),
@@ -12,7 +13,7 @@ import { IConceptPage } from '../../interfaces/concept-page.interface';
 })
 export class ConceptComponent implements IBeforeRender {
     @Binding()
-    public navigationComponent!: IComponentDefinition;
+    public navigationComponent: IComponentDefinition;
 
     @Binding()
     public contentComponent?: IComponentDefinition;
@@ -20,7 +21,9 @@ export class ConceptComponent implements IBeforeRender {
     private _markdown: string;
     private _interpolatableComponents: Array<IComponentDefinition>;
 
-    constructor(markdown: string, _pages: Array<IConceptPage>, _modulePath: string, interpolatableComponents: Array<IComponentDefinition> = []) {
+    constructor(markdown: string, pages: Array<IConceptPage>, modulePath: string, interpolatableComponents: Array<IComponentDefinition> = []) {
+        this.navigationComponent = $componentFactory(ModuleNavComponent, pages, modulePath);
+
         this._markdown = markdown;
         this._interpolatableComponents = interpolatableComponents;
     }
