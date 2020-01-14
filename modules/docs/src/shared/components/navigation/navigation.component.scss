@@ -1,0 +1,21 @@
+.Navigation {
+  background: #0C2e65;
+  color: #f0f0f0;
+
+  &-links {
+    display: flex;
+    list-style: none;
+    justify-content: flex-end;
+    margin: 0;
+    padding: 0;
+  }
+
+  &-href {
+    color: #f0f0f0;
+    display: block;
+    font-size: 0.8rem;
+    padding: 10px 50px;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+}
