@@ -4,7 +4,6 @@ import { Binding, Component, IComponentDefinition } from '@getig/core';
 import { join } from 'path';
 import { $loadStyle } from '../../helpers/load-style';
 import { HeaderComponent } from '../header/header.component';
-import { NavigationComponent } from '../navigation/navigation.component';
 
 @Component({
     template: $readFile(join(__dirname, './layout.component.html')),
@@ -12,7 +11,6 @@ import { NavigationComponent } from '../navigation/navigation.component';
     components: [
         DynamicComponent,
         IfComponent,
-        NavigationComponent,
         HeaderComponent
     ]
 })

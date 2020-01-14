@@ -1,25 +1,35 @@
 .Header {
-  background: linear-gradient(#ffa05e, #ff7f27);
+  align-items: center;
+  background: linear-gradient(#0C2e65, #24598c);
+  box-shadow: 0 0 5px 0 #333;
+  color: #f0f0f0;
   display: flex;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
 
   &-image {
     flex: 0 1 60%;
+    max-height: 100%;
   }
 
   &-logo {
     align-items: center;
-    background: #24598c;
     display: flex;
-    flex: 0 0 20%;
+    height: 80px;
     justify-content: center;
   }
 
   &-title {
-    align-self: center;
+    flex: 1 0 auto;
     font-family: "Century Gothic", sans-serif;
-    font-size: 72px;
+    font-size: 1rem;
     margin: 0;
-    padding: 50px;
     text-transform: uppercase;
+  }
+
+  &-spacer {
+    height: 80px;
   }
 }
