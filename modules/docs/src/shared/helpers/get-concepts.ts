@@ -27,10 +27,10 @@ export async function $getConcepts(module: string): Promise<Array<IConceptPage>>
                 let title: string = outFileName;
                 const resources: Array<IResource> = [];
 
-                content = content.replace(/<h1>(.+?)<\/h1>/, (match: string, matchedTitle: string): string => {
+                content = content.replace(/<h1>(.+?)<\/h1>/, (_match: string, matchedTitle: string): string => {
                     title = matchedTitle;
 
-                    return match;
+                    return '';
                 });
 
                 content = await $stringReplace(content, /<img(?:[\s\S]+?)src="(.+?)"/g, async(match: string, filePath: string): Promise<string> => {

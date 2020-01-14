@@ -1,2 +1,11 @@
-@{DynamicComponent(navigationComponent)}
-@{DynamicComponent(contentComponent)}
+<article class="Concept">
+    <div class="Concept-header">
+        <div class="Concept-headerWrapper">
+            <h1 class="Concept-title">#{title}</h1>
+        </div>
+
+        @{DynamicComponent(navigationComponent)}
+    </div>
+
+    @{ContentComponent(contentComponent)}
+</article>

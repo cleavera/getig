@@ -1,5 +1,19 @@
 .ModuleNavItem {
   &-href {
+    color: #0C2e65;
+    display: block;
+    padding: 10px;
     text-decoration: none;
+
+    &:focus,
+    &:hover {
+      color: #24598c;
+      outline: 1px #24598c inset;
+    }
+
+    &:active {
+      background: #24598c;
+      color: #f0f0f0;
+    }
   }
 }

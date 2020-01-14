@@ -27,7 +27,7 @@ export async function $generatePages(moduleName: string, interpolatableComponent
             `${page.path}.html`,
             new PageComponent(
                 page.title,
-                $componentFactory(ConceptComponent, page.content, pages, moduleName, interpolatableComponents)),
+                $componentFactory(ConceptComponent, page.content, page.title, pages, moduleName, interpolatableComponents)),
             page.resources));
     }
 
