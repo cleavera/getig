@@ -4,6 +4,7 @@
   "description": "Documentation for getig",
   "scripts": {
     "build": "npm run clean && npm run lint && npm run compile",
+    "dev": "chokidar src/**/* content/**/* -c \"npm run compile\"",
     "compile": "ts-node src/core/index",
     "clean": "git clean -X -f -d --exclude=\"!node_modules\"",
     "lint": "tslint --project ./tsconfig.json"
@@ -15,9 +16,12 @@
     "@cleavera/fs": "^1.4.1",
     "@getig/common": "^0.5.0",
     "@getig/core": "^0.8.0",
+    "@types/glob": "^7.1.1",
     "@types/markdown-it": "0.0.9",
     "@types/node": "^10.12.15",
     "@types/node-sass": "^4.11.0",
+    "chokidar-cli": "^2.1.0",
+    "glob": "^7.1.6",
     "markdown-it": "^10.0.0",
     "node-sass": "^4.13.0",
     "ts-node": "^8.5.4",

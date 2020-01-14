@@ -5,11 +5,13 @@ import { ROOT } from '../../root';
 import { LOGGER } from '../shared';
 import { CoreModule } from './core.module';
 
-LOGGER.configure(Logger.LogLevel.ERROR);
+LOGGER.configure(Logger.LogLevel.SILLY);
 
-$bootstrap(CoreModule, join(ROOT, './dist')).catch((e: Error) => {
-    throw e;
-});
+$bootstrap(CoreModule, join(ROOT, './dist')).then(() => {
+        LOGGER.info('Compilation completed');
+    }, (e: Error) => {
+        throw e;
+    });
 
 process.on('unhandledRejection', (reason: unknown | null | undefined) => {
     if (reason instanceof Error) {

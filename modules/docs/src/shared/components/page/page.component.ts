@@ -3,6 +3,7 @@ import { DynamicComponent, ScriptsComponent, StylesheetComponent } from '@getig/
 import { Binding, Component, IComponentDefinition } from '@getig/core';
 import { join } from 'path';
 import { $loadStyle } from '../../helpers/load-style';
+import { LayoutComponent } from '../layout/layout.component';
 
 @Component({
     template: $readFile(join(__dirname, './page.component.html')),
@@ -10,6 +11,7 @@ import { $loadStyle } from '../../helpers/load-style';
     components: [
         StylesheetComponent,
         ScriptsComponent,
+        LayoutComponent,
         DynamicComponent
     ]
 })

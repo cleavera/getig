@@ -1,0 +1,30 @@
+.Header {
+  background: linear-gradient(#ffa05e, #ff7f27);
+  display: flex;
+
+  &-image {
+    flex: 0 1 60%;
+  }
+
+  &-logo {
+    align-items: center;
+    background: #24598c;
+    display: flex;
+    flex: 0 0 20%;
+    justify-content: center;
+  }
+
+  &-title {
+    align-self: center;
+    font-family: "Century Gothic", sans-serif;
+    font-size: 72px;
+    margin: 0;
+    padding: 50px;
+    text-transform: uppercase;
+  }
+
+  &-nav {
+    background: #0C2e65;
+    color: #f0f0f0;
+  }
+}
