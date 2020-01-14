@@ -1,7 +1,9 @@
+@import "../../styles/index";
+
 .Concept {
   &-header {
-    background: #f0f0f0;
-    box-shadow: 0 0 5px 0 #333;
+    background: $color-font-invert;
+    box-shadow: 0 0 5px 0 $color-shading;
   }
 
   &-headerWrapper {
@@ -13,7 +15,7 @@
   }
 
   &-title {
-    color: #333;
+    color: $color-font-title;
     font-family: "Century Gothic", sans-serif;
     font-size: 3.5rem;
     font-weight: 100;

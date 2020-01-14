@@ -1,10 +1,12 @@
+@import "../../styles/index";
+
 :root {
   font-family: "open-sans", sans-serif;
   font-size: 100%;
 }
 
 body {
-  background: #fff;
+  background: $color-background;
   margin: 0;
   padding: 0;
 }

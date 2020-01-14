@@ -1,8 +1,10 @@
+@import "../../styles/index";
+
 .Header {
   align-items: center;
-  background: linear-gradient(#0C2e65, #24598c);
-  box-shadow: 0 0 5px 0 #333;
-  color: #f0f0f0;
+  background: linear-gradient($color-primary, $color-primary-accent);
+  box-shadow: 0 0 5px 0 $color-shading;
+  color: $color-font-invert;
   display: flex;
   left: 0;
   position: fixed;

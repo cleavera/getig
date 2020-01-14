@@ -1,19 +1,21 @@
+@import "../../styles/index";
+
 .ModuleNavItem {
   &-href {
-    color: #0C2e65;
+    color: $color-primary;
     display: block;
     padding: 10px;
     text-decoration: none;
 
     &:focus,
     &:hover {
-      color: #24598c;
-      outline: 1px #24598c inset;
+      color: $color-primary-accent;
+      outline: 1px $color-primary-accent inset;
     }
 
     &.is-active {
-      background: #24598c;
-      color: #f0f0f0;
+      background: $color-primary-accent;
+      color: $color-font-invert;
     }
   }
 }

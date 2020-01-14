@@ -1,3 +1,5 @@
+@import "../../styles/index";
+
 .Navigation {
   &-links {
     display: flex;
@@ -8,7 +10,7 @@
   }
 
   &-href {
-    color: #f0f0f0;
+    color: $color-font-invert;
     display: block;
     font-size: 0.8rem;
     padding: 10px 50px;

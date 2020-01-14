@@ -1,5 +1,7 @@
+@import "../../styles/index";
+
 .Content {
-  border: 1px solid #ccc;
+  border: 1px solid $color-shading-accent;
   box-sizing: border-box;
   margin: auto;
   max-width: 900px;
