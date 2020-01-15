@@ -2,7 +2,7 @@ import { $readFile } from '@cleavera/fs';
 import { $componentFactory } from '@getig/common';
 import { Binding, Component, IComponentDefinition } from '@getig/core';
 import { join } from 'path';
-import { ContentComponent, MarkdownComponent } from '../../../shared';
+import { $loadContent, ContentComponent, MarkdownComponent } from '../../../shared';
 
 @Component({
     template: $readFile(join(__dirname, './error.component.html')),
@@ -15,6 +15,6 @@ export class ErrorComponent {
     public content: IComponentDefinition;
 
     constructor() {
-        this.content = $componentFactory(MarkdownComponent, 'error.md');
+        this.content = $componentFactory(MarkdownComponent, $loadContent('error.md'));
     }
 }

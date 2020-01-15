@@ -1,6 +1,6 @@
 import { join } from 'path';
-import { ROOT } from '../../../root';
+import { CONTENT_BASE_PATH } from '../constants/content-base-path.constant';
 
 export function $getContentPath(path: string): string {
-    return join(ROOT, './content', path);
+    return join(CONTENT_BASE_PATH, path);
 }

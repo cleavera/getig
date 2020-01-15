@@ -1,7 +1,9 @@
 import { $readFile } from '@cleavera/fs';
-import { $componentFactory, DynamicComponent, ProjectionComponent } from '@getig/common';
+import { $componentFactory, DynamicComponent } from '@getig/common';
 import { Binding, Component, IBeforeRender, IComponentDefinition } from '@getig/core';
 import { join } from 'path';
+import { MarkdownComponent } from '../../components/markdown/markdown.component';
+import { CONTENT_BASE_PATH } from '../../constants/content-base-path.constant';
 import { $loadStyle } from '../../helpers/load-style';
 import { IConceptPage } from '../../interfaces/concept-page.interface';
 import { ContentComponent } from '../content/content.component';
@@ -26,6 +28,7 @@ export class ConceptComponent implements IBeforeRender {
     public title: string;
 
     private _markdown: string;
+    private _modulePath: string;
     private _interpolatableComponents: Array<IComponentDefinition>;
 
     constructor(markdown: string, title: string, pages: Array<IConceptPage>, modulePath: string, interpolatableComponents: Array<IComponentDefinition> = []) {
@@ -33,11 +36,12 @@ export class ConceptComponent implements IBeforeRender {
         this.title = title;
 
         this._markdown = markdown;
+        this._modulePath = modulePath;
         this._interpolatableComponents = interpolatableComponents;
     }
 
     public async beforeRender(): Promise<void> {
-        this.contentComponent = $componentFactory(ProjectionComponent, await this._interpolateComponents(this._markdown, this._interpolatableComponents));
+        this.contentComponent = $componentFactory(MarkdownComponent, await this._interpolateComponents(this._markdown, this._interpolatableComponents), join(CONTENT_BASE_PATH, this._modulePath));
     }
 
     private async _interpolateComponents(markdown: string, interpolatableComponents: Array<IComponentDefinition>): Promise<string> {

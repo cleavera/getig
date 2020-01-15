@@ -1,3 +1,4 @@
+export { $loadContent } from './helpers/load-content';
 export { ContentComponent } from './components/content/content.component';
 export { $generatePages } from './helpers/generate-pages';
 export { LOGGER } from './constants/logger.constant';
