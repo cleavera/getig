@@ -1,6 +1,13 @@
+@import "../../styles/index";
+
 .Markdown {
-  pre {
+  code {
+    background: $color-background-accent;
+    display: block;
+    font-family: Consolas, monospace;
+    font-size: 0.8rem;
     max-width: 100%;
     overflow-x: auto;
+    padding: 1em;
   }
 }
