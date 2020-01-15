@@ -13,8 +13,12 @@
     color: $color-font-invert;
     display: block;
     font-size: 0.8rem;
-    padding: 10px 50px;
+    padding: 10px;
     text-decoration: none;
     text-transform: uppercase;
+
+    @include media(400px) {
+      padding: 10px 50px;
+    }
   }
 }

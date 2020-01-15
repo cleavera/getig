@@ -24,11 +24,21 @@
   }
 
   &-title {
-    flex: 1 0 auto;
+    display: none;
     font-family: $font-family-title;
     font-size: 1rem;
     margin: 0;
     text-transform: uppercase;
+
+    @include media(525px) {
+      display: block;
+    }
+  }
+
+  &-navigation {
+    display: flex;
+    flex: 1 0 auto;
+    justify-content: flex-end;
   }
 
   &-spacer {
