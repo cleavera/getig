@@ -1,3 +1,5 @@
+export { MODULE_REGISTRY } from './constants/module-registry.constant';
+export { COMPONENT_REGISTRY } from './constants/component-registry.constant';
 export { Page } from './classes/page';
 export { Resource } from './classes/resource';
 export { RESOURCE_STORE } from './constants/resource-store.constant';

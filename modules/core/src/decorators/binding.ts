@@ -1,6 +1,6 @@
 import { $isString } from '@cleavera/utils';
+import { COMPONENT_REGISTRY } from '../constants/component-registry.constant';
 import { LOGGER } from '../constants/logger.constant';
-import { Component } from './component';
 
 export function Binding(): PropertyDecorator {
     return (componentDefinition: any, propertyKey: string | symbol): void => { // tslint:disable-line no-any
@@ -10,6 +10,6 @@ export function Binding(): PropertyDecorator {
             return process.exit(1);
         }
 
-        Component.addBinding(componentDefinition.constructor, propertyKey);
+        COMPONENT_REGISTRY.addBinding(componentDefinition.constructor, propertyKey);
     };
 }
