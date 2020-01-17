@@ -1,4 +1,4 @@
-import { IPage, Module } from '@getig/core';
+import { IPage, Module, MODULE_REGISTRY } from '@getig/core';
 import { $generatePages } from '../shared';
 
 @Module({
@@ -10,7 +10,7 @@ export class DocsModule {
         const pages: Array<IPage> = await $generatePages('docs');
 
         for (const page of pages) {
-            Module.addDynamicPage(this, page);
+            MODULE_REGISTRY.addDynamicPage(this, page);
         }
     }
 }
