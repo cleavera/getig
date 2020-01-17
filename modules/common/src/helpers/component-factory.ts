@@ -1,4 +1,4 @@
-import { Binding, Component, IComponentDefinition, IComponentInstance } from '@getig/core';
+import { Binding, Component, COMPONENT_REGISTRY, IComponentDefinition, IComponentInstance } from '@getig/core';
 
 export function $componentFactory(componentDefinition: IComponentDefinition, ...args: Array<unknown>): IComponentDefinition {
     @Component({
@@ -11,10 +11,10 @@ export function $componentFactory(componentDefinition: IComponentDefinition, ...
         constructor() {
             const instance: IComponentInstance = new componentDefinition(...args);
 
-            this.content = Component.render(instance);
+            this.content = COMPONENT_REGISTRY.render(instance);
 
-            Component.addInstance(this, instance);
-            Component.addDynamicComponent(this, componentDefinition);
+            COMPONENT_REGISTRY.addInstance(this, instance);
+            COMPONENT_REGISTRY.addDynamicComponent(this, componentDefinition);
         }
     }
 

@@ -1,5 +1,5 @@
 import { $readFile } from '@cleavera/fs';
-import { Binding, Component, IComponentDefinition } from '@getig/core';
+import { Binding, Component, COMPONENT_REGISTRY, IComponentDefinition } from '@getig/core';
 import { join } from 'path';
 
 @Component({
@@ -10,12 +10,12 @@ export class DynamicComponent<T = unknown> {
     public content: Promise<string>;
 
     constructor(component: IComponentDefinition<T>) {
-        Component.addDynamicComponent(this, component);
+        COMPONENT_REGISTRY.addDynamicComponent(this, component);
 
         const instance: T = new component();
 
-        Component.addInstance(this, instance);
+        COMPONENT_REGISTRY.addInstance(this, instance);
 
-        this.content = Component.render(instance);
+        this.content = COMPONENT_REGISTRY.render(instance);
     }
 }

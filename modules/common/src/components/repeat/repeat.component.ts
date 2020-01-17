@@ -1,6 +1,7 @@
 import { $readFile } from '@cleavera/fs';
 import { Asyncable } from '@cleavera/utils';
 import { Binding, Component, IComponentDefinition } from '@getig/core';
+import { COMPONENT_REGISTRY } from '@getig/core';
 import { join } from 'path';
 
 @Component({
@@ -11,7 +12,7 @@ export class RepeatComponent<T = unknown> {
     public content: Promise<string>;
 
     constructor(items: Array<unknown>, component: IComponentDefinition<T>) {
-        Component.addDynamicComponent(this, component);
+        COMPONENT_REGISTRY.addDynamicComponent(this, component);
         this.content = this._renderComponents(items, component);
     }
 
@@ -19,9 +20,9 @@ export class RepeatComponent<T = unknown> {
         const values: Array<string> = await Promise.all((await items).map((item: unknown) => {
             const instance: T = new component(item);
 
-            Component.addInstance(this, instance);
+            COMPONENT_REGISTRY.addInstance(this, instance);
 
-            return Component.render(instance);
+            return COMPONENT_REGISTRY.render(instance);
         }));
 
         return values.join('');

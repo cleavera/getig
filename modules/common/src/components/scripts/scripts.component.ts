@@ -1,5 +1,6 @@
 import { IDict } from '@cleavera/utils';
 import { Binding, Component, IComponentDefinition, IComponentInstance, IOnRender, Resource, RESOURCE_STORE } from '@getig/core';
+import { COMPONENT_REGISTRY } from '@getig/core';
 
 @Component({
     template: '<script src="#{url}"></script>',
@@ -10,10 +11,10 @@ export class ScriptsComponent implements IOnRender {
     public url!: string;
 
     public async onRender(): Promise<void> {
-        const parent: IComponentInstance = Component.getParent(this);
-        const components: Array<IComponentDefinition> = Component.getDescendants(parent);
+        const parent: IComponentInstance = COMPONENT_REGISTRY.getParent(this);
+        const components: Array<IComponentDefinition> = COMPONENT_REGISTRY.getDescendants(parent);
 
-        components.push(Component.getDefinition(parent));
+        components.push(COMPONENT_REGISTRY.getDefinition(parent));
 
         const scripts: Resource = Resource.FromString((await this._getScripts(components)).join('\n'), 'js');
 
@@ -26,7 +27,7 @@ export class ScriptsComponent implements IOnRender {
         const scripts: IDict<boolean> = {};
 
         await Promise.all(components.map(async(component: IComponentDefinition) => {
-            const scriptDefinitions: Array<Promise<string>> = Component.getScripts(component);
+            const scriptDefinitions: Array<Promise<string>> = COMPONENT_REGISTRY.getScripts(component);
 
             for (const scriptDefinition of scriptDefinitions) {
                 scripts[(await scriptDefinition)] = true;
