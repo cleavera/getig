@@ -1,4 +1,4 @@
-import { IDict } from '@cleavera/utils';
+import { IDict } from '@cleavera/types';
 import { Binding, Component, COMPONENT_REGISTRY, IComponentDefinition, IComponentInstance, IOnRender, Resource, RESOURCE_STORE } from '@getig/core';
 
 @Component({

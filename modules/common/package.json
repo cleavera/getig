@@ -6,21 +6,25 @@
   "scripts": {
     "build": "tsc && copyfiles -u 1 src/**/*.component.html dist",
     "clean": "git clean -X -f -d --exclude=\"!node_modules\"",
-    "lint": "tslint --project ./tsconfig.json",
+    "lint": "npx eslint ./src/**/*.ts",
     "prepack": "npm run clean && npm run lint && npm run build"
   },
   "author": "Anthony Cleaver",
   "license": "ISC",
   "devDependencies": {
+    "@cleavera/config": "^2.4.0",
+    "@cleavera/types": "^1.0.2",
     "@getig/core": "^1.0.0",
-    "@types/node": "^10.17.13",
-    "copyfiles": "^2.1.1",
-    "tslint": "^5.20.1",
-    "typescript": "^3.7.4"
+    "@types/node": "^13.11.0",
+    "@typescript-eslint/eslint-plugin": "^2.27.0",
+    "@typescript-eslint/parser": "^2.27.0",
+    "copyfiles": "^2.2.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.20.2",
+    "typescript": "^3.8.3"
   },
   "dependencies": {
-    "@cleavera/fs": "^1.4.1",
-    "@cleavera/utils": "^2.6.0"
+    "@cleavera/fs": "^1.4.1"
   },
   "peerDependencies": {
     "@getig/core": "^0.6.0"

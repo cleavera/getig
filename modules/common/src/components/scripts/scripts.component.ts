@@ -1,6 +1,5 @@
-import { IDict } from '@cleavera/utils';
-import { Binding, Component, IComponentDefinition, IComponentInstance, IOnRender, Resource, RESOURCE_STORE } from '@getig/core';
-import { COMPONENT_REGISTRY } from '@getig/core';
+import { IDict } from '@cleavera/types';
+import { Binding, Component, COMPONENT_REGISTRY, IComponentDefinition, IComponentInstance, IOnRender, Resource, RESOURCE_STORE } from '@getig/core';
 
 @Component({
     template: '<script src="#{url}"></script>',

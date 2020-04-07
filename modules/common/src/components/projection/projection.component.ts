@@ -1,4 +1,4 @@
-import { Asyncable } from '@cleavera/utils';
+import { Asyncable } from '@cleavera/types';
 import { Binding, Component } from '@getig/core';
 
 @Component({
