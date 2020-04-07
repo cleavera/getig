@@ -1,6 +1,8 @@
 import { $createDirectory, $writeFile } from '@cleavera/fs';
-import { $isNull, Asyncable, Maybe } from '@cleavera/utils';
+import { Asyncable, Maybe } from '@cleavera/types';
+import { isNull, isUndefined } from '@cleavera/utils';
 import { join } from 'path';
+
 import { COMPONENT_REGISTRY } from '../constants/component-registry.constant';
 import { LOGGER } from '../constants/logger.constant';
 import { RESOURCE_STORE } from '../constants/resource-store.constant';
@@ -12,7 +14,7 @@ import { IResource } from '../interfaces/resource.interface';
 import { MetaData } from '../services/meta-data';
 
 export class ModuleRegistry {
-    private _registry: MetaData;
+    private readonly _registry: MetaData;
 
     constructor() {
         this._registry = new MetaData('Module meta data');
@@ -31,24 +33,24 @@ export class ModuleRegistry {
             RESOURCE_STORE.addResource(resource);
         });
 
-        pages.forEach((page: IPage) => {
+        pages.forEach((page: IPage): void => {
             this.addPage(moduleDefinition, page);
         });
 
-        children.forEach((child: IModuleDefinition) => {
+        children.forEach((child: IModuleDefinition): void => {
             this.addChild(moduleDefinition, child);
         });
     }
 
     public async generate(moduleInstance: IModuleInstance, basePath: string = process.cwd()): Promise<void> {
-        if (moduleInstance.beforeGenerate) {
+        if (!isUndefined(moduleInstance.beforeGenerate)) {
             LOGGER.silly(`Running beforeGenerate lifecycle hook for ${moduleInstance.constructor.name}`);
             await moduleInstance.beforeGenerate();
         }
 
         const modulePath: Maybe<string> = this.getPath(moduleInstance.constructor);
 
-        if ($isNull(modulePath)) {
+        if (isNull(modulePath)) {
             LOGGER.error(new Error(`Module needs a path ${moduleInstance}`));
 
             return process.exit(1);
@@ -82,7 +84,7 @@ export class ModuleRegistry {
     }
 
     public addPage(moduleDefinition: IModuleDefinition, page: IPage): void {
-        const pages: Array<IPage> = this._registry.get(moduleDefinition, 'pages') || [];
+        const pages: Array<IPage> = this._registry.get(moduleDefinition, 'pages') ?? [];
 
         pages.push(page);
 
@@ -94,7 +96,7 @@ export class ModuleRegistry {
     }
 
     public addDynamicPage(moduleInstance: IModuleInstance, page: IPage): void {
-        const pages: Array<IPage> = this._registry.get(moduleInstance, 'pages') || [];
+        const pages: Array<IPage> = this._registry.get(moduleInstance, 'pages') ?? [];
 
         pages.push(page);
 
@@ -106,14 +108,14 @@ export class ModuleRegistry {
     }
 
     public getPages(moduleInstance: IModuleInstance): Array<IPage> {
-        const staticPages: Array<IPage> = this._registry.get(moduleInstance.constructor, 'pages') || [];
-        const dynamicPages: Array<IPage> = this._registry.get(moduleInstance, 'pages') || [];
+        const staticPages: Array<IPage> = this._registry.get(moduleInstance.constructor, 'pages') ?? [];
+        const dynamicPages: Array<IPage> = this._registry.get(moduleInstance, 'pages') ?? [];
 
         return staticPages.concat(dynamicPages);
     }
 
     public addChild(moduleDefinition: IModuleDefinition, child: IComponentDefinition): void {
-        const children: Array<IComponentDefinition> = this._registry.get(moduleDefinition, 'children') || [];
+        const children: Array<IComponentDefinition> = this._registry.get(moduleDefinition, 'children') ?? [];
 
         children.push(child);
 
@@ -121,7 +123,7 @@ export class ModuleRegistry {
     }
 
     public addDynamicChild(moduleInstance: IModuleInstance, child: IComponentDefinition): void {
-        const children: Array<IComponentDefinition> = this._registry.get(moduleInstance, 'children') || [];
+        const children: Array<IComponentDefinition> = this._registry.get(moduleInstance, 'children') ?? [];
 
         children.push(child);
 
@@ -129,8 +131,8 @@ export class ModuleRegistry {
     }
 
     public getChildren(moduleInstance: IModuleInstance): Array<IComponentDefinition> {
-        const staticChildren: Array<IComponentDefinition> = this._registry.get(moduleInstance.constructor, 'children') || [];
-        const dynamicChildren: Array<IComponentDefinition> = this._registry.get(moduleInstance, 'children') || [];
+        const staticChildren: Array<IComponentDefinition> = this._registry.get(moduleInstance.constructor, 'children') ?? [];
+        const dynamicChildren: Array<IComponentDefinition> = this._registry.get(moduleInstance, 'children') ?? [];
 
         return staticChildren.concat(dynamicChildren);
     }

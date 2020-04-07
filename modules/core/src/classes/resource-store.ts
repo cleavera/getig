@@ -1,4 +1,5 @@
-import { Asyncable } from '@cleavera/utils';
+import { Asyncable } from '@cleavera/types';
+
 import { IResource } from '../interfaces/resource.interface';
 
 export class ResourceStore {

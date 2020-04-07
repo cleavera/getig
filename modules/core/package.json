@@ -6,18 +6,25 @@
   "scripts": {
     "build": "tsc",
     "clean": "git clean -X -f -d --exclude=\"!node_modules\"",
-    "lint": "tslint --project ./tsconfig.json",
+    "lint": "npx eslint ./src/**/*.ts",
     "prepack": "npm run clean && npm run lint && npm run build"
   },
   "author": "Anthony Cleaver",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^10.12.15",
-    "tslint": "^5.17.0",
-    "typescript": "^3.5.1"
+    "@cleavera/config": "^2.4.0",
+    "@types/node": "^13.11.0",
+    "@typescript-eslint/eslint-plugin": "^2.27.0",
+    "@typescript-eslint/parser": "^2.27.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.20.2",
+    "tslint": "^6.1.1",
+    "typescript": "^3.8.3"
   },
   "dependencies": {
-    "@cleavera/fs": "^1.1.0",
-    "@cleavera/utils": "^2.3.0"
+    "@cleavera/debug": "^1.0.1",
+    "@cleavera/fs": "^1.4.1",
+    "@cleavera/types": "^1.0.3",
+    "@cleavera/utils": "^4.0.0"
   }
 }

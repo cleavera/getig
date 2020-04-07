@@ -1,4 +1,4 @@
-import { Asyncable } from '@cleavera/utils';
+import { Asyncable } from '@cleavera/types';
 
 export interface IBeforeRender {
     beforeRender(): Asyncable<void>;

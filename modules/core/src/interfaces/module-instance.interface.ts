@@ -1,1 +1,1 @@
-export type IModuleInstance = any; // tslint:disable-line no-any
+export type IModuleInstance = any; // eslint-disable-line @typescript-eslint/no-explicit-any

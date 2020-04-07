@@ -1,4 +1,6 @@
-import { $isNull, $stringReplace, Asyncable, IDict, Maybe } from '@cleavera/utils';
+import { Asyncable, IDict, Maybe } from '@cleavera/types';
+import { isNull, isUndefined, stringReplace } from '@cleavera/utils';
+
 import { LOGGER } from '../constants/logger.constant';
 import { RESOURCE_STORE } from '../constants/resource-store.constant';
 import { IComponentDefinition } from '../interfaces/component-definition.interface';
@@ -9,7 +11,7 @@ import { IResource } from '../interfaces/resource.interface';
 import { MetaData } from '../services/meta-data';
 
 export class ComponentRegistry {
-    private _registry: MetaData;
+    private readonly _registry: MetaData;
 
     constructor() {
         this._registry = new MetaData('Component meta data');
@@ -40,15 +42,15 @@ export class ComponentRegistry {
             resources = [resources];
         }
 
-        styles.forEach((style: Asyncable<string>) => {
+        styles.forEach((style: Asyncable<string>): void => {
             this.addStyles(componentDefinition, style);
         });
 
-        scripts.forEach((script: Asyncable<string>) => {
+        scripts.forEach((script: Asyncable<string>): void => {
             this.setScripts(componentDefinition, script);
         });
 
-        components.forEach((component: IComponentDefinition) => {
+        components.forEach((component: IComponentDefinition): void => {
             this.addStaticComponent(componentDefinition, component);
         });
 
@@ -64,7 +66,7 @@ export class ComponentRegistry {
     }
 
     public getIsDependant(componentDefinition: IComponentDefinition): boolean {
-        return this._registry.get(componentDefinition, 'isDependant') || false;
+        return this._registry.get(componentDefinition, 'isDependant') ?? false;
     }
 
     public async render(componentInstance: IComponentInstance): Promise<string> {
@@ -76,19 +78,19 @@ export class ComponentRegistry {
         const bindings: Array<string> = this.getBindings(componentDefinition);
         const components: Array<IComponentDefinition> = this.getComponents(componentDefinition);
 
-        if ($isNull(template)) {
+        if (isNull(template)) {
             LOGGER.error(new Error(`No template ${componentDefinition.name}`));
 
             return process.exit(1);
         }
 
-        if (componentInstance.beforeRender) {
+        if (!isUndefined(componentInstance.beforeRender)) {
             LOGGER.silly(`Running beforeRender lifecycle hook for ${componentDefinition.name}`);
             await componentInstance.beforeRender();
         }
 
         return this.interpolate(componentInstance, template, bindings, components, async(): Promise<void> => {
-            if (componentInstance.onRender) {
+            if (!isUndefined(componentInstance.onRender)) {
                 LOGGER.silly(`Running onRender lifecycle hook for ${componentDefinition.name}`);
                 await componentInstance.onRender();
             }
@@ -103,11 +105,11 @@ export class ComponentRegistry {
         onRender: Maybe<() => Asyncable<void>> = null
     ): Promise<string> {
         for (const component of components) {
-            template = await $stringReplace(
+            template = await stringReplace(
                 template,
                 new RegExp(`@{${component.name}\\(((?:[A-z0-9-_]+?(?:,(?:\\s)?)?)*)\\)}`, 'g'),
-                async(_match: string, args: string): Promise<string> => {
-                    const params: Array<unknown> = args.split(/,\s?/g).map((param: string) => {
+                async([_match, args]: RegExpExecArray): Promise<string> => {
+                    const params: Array<unknown> = args.split(/,\s?/g).map((param: string): unknown => {
                         for (const c of components) {
                             if (c.name === param) {
                                 return c;
@@ -124,10 +126,11 @@ export class ComponentRegistry {
                     this.addInstance(context, comp);
 
                     return await this.render(comp);
-                });
+                }
+            );
         }
 
-        if (!$isNull(onRender)) {
+        if (!isNull(onRender)) {
             await onRender();
         }
 
@@ -147,7 +150,7 @@ export class ComponentRegistry {
     }
 
     public addStaticComponent(componentDefinition: IComponentDefinition, component: IComponentDefinition): void {
-        const components: Array<IComponentDefinition> = this._registry.get(componentDefinition, 'components') || [];
+        const components: Array<IComponentDefinition> = this._registry.get(componentDefinition, 'components') ?? [];
 
         if (this.getIsDependant(component)) {
             components.push(component);
@@ -159,7 +162,7 @@ export class ComponentRegistry {
     }
 
     public addDynamicComponent(componentInstance: IComponentInstance, component: IComponentDefinition): void {
-        const components: Array<IComponentDefinition> = this._registry.get(componentInstance, 'components') || [];
+        const components: Array<IComponentDefinition> = this._registry.get(componentInstance, 'components') ?? [];
 
         components.push(component);
 
@@ -167,8 +170,8 @@ export class ComponentRegistry {
     }
 
     public getComponents(componentInstance: IComponentInstance): Array<IComponentDefinition> {
-        const dynamicComponents: Array<IComponentDefinition> = this._registry.get(componentInstance, 'components') || [];
-        const staticComponents: Array<IComponentDefinition> = this._registry.get(this.getDefinition(componentInstance), 'components') || [];
+        const dynamicComponents: Array<IComponentDefinition> = this._registry.get(componentInstance, 'components') ?? [];
+        const staticComponents: Array<IComponentDefinition> = this._registry.get(this.getDefinition(componentInstance), 'components') ?? [];
 
         return dynamicComponents.concat(staticComponents);
     }
@@ -189,7 +192,7 @@ export class ComponentRegistry {
     }
 
     public addBinding(componentDefinition: IComponentDefinition, binding: string): void {
-        const bindings: Array<string> = this._registry.get(componentDefinition, 'bindings') || [];
+        const bindings: Array<string> = this._registry.get(componentDefinition, 'bindings') ?? [];
 
         bindings.push(binding);
 
@@ -197,11 +200,11 @@ export class ComponentRegistry {
     }
 
     public getBindings(componentDefinition: IComponentDefinition): Array<string> {
-        return this._registry.get(componentDefinition, 'bindings') || [];
+        return this._registry.get(componentDefinition, 'bindings') ?? [];
     }
 
     public addStyles(componentDefinition: IComponentDefinition, styleDefinitions: Asyncable<string>): void {
-        const styles: Array<Promise<string>> = this._registry.get(componentDefinition, 'styles') || [];
+        const styles: Array<Promise<string>> = this._registry.get(componentDefinition, 'styles') ?? [];
 
         styles.push(Promise.resolve(styleDefinitions));
 
@@ -209,11 +212,11 @@ export class ComponentRegistry {
     }
 
     public getStyles(componentDefinition: IComponentDefinition): Array<Promise<string>> {
-        return this._registry.get(componentDefinition, 'styles') || [];
+        return this._registry.get(componentDefinition, 'styles') ?? [];
     }
 
     public setScripts(componentDefinition: IComponentDefinition, script: Asyncable<string>): void {
-        const scripts: Array<Promise<string>> = this._registry.get(componentDefinition, 'scripts') || [];
+        const scripts: Array<Promise<string>> = this._registry.get(componentDefinition, 'scripts') ?? [];
 
         scripts.push(Promise.resolve(script));
 
@@ -221,7 +224,7 @@ export class ComponentRegistry {
     }
 
     public getScripts(componentDefinition: IComponentDefinition): Array<Promise<string>> {
-        return this._registry.get(componentDefinition, 'scripts') || [];
+        return this._registry.get(componentDefinition, 'scripts') ?? [];
     }
 
     public getDefinition(componentInstance: IComponentInstance): IComponentDefinition {
@@ -229,7 +232,7 @@ export class ComponentRegistry {
     }
 
     public addInstance(parentInstance: IComponentInstance, childInstance: IComponentInstance): void {
-        const instances: Array<IInstanceMapping> = this._registry.get(parentInstance, 'instances') || [];
+        const instances: Array<IInstanceMapping> = this._registry.get(parentInstance, 'instances') ?? [];
 
         instances.push({
             type: childInstance.constructor,
@@ -241,9 +244,9 @@ export class ComponentRegistry {
     }
 
     public getInstances(parentInstance: IComponentInstance, childDefinition: IComponentDefinition): Array<IComponentInstance> {
-        const instances: Array<IInstanceMapping> = this._registry.get(parentInstance, 'instances') || [];
+        const instances: Array<IInstanceMapping> = this._registry.get(parentInstance, 'instances') ?? [];
 
-        return instances.reduce((filteredInstances: Array<IComponentInstance>, instance: IInstanceMapping) => {
+        return instances.reduce((filteredInstances: Array<IComponentInstance>, instance: IInstanceMapping): IComponentInstance => {
             if (instance.type === childDefinition) {
                 filteredInstances.push(instance.instance);
             }

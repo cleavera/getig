@@ -1,3 +1,3 @@
-export interface IModuleDefinition<T = unknown> { // tslint:disable-line no-any
-    new(...args: Array<any>): T; // tslint:disable-line no-any
+export interface IModuleDefinition<T = unknown> {
+    new(...args: Array<any>): T; // eslint-disable-line @typescript-eslint/no-explicit-any
 }

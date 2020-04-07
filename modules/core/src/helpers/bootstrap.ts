@@ -1,6 +1,7 @@
 import { $createDirectory, $writeFile } from '@cleavera/fs';
-import { LogLevel } from '@cleavera/utils';
+import { LogLevel } from '@cleavera/types';
 import { join } from 'path';
+
 import { LOGGER } from '../constants/logger.constant';
 import { MODULE_REGISTRY } from '../constants/module-registry.constant';
 import { RESOURCE_STORE } from '../constants/resource-store.constant';

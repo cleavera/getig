@@ -1,4 +1,5 @@
-import { Maybe } from '@cleavera/utils';
+import { Maybe } from '@cleavera/types';
+
 import { IComponentDefinition } from '../interfaces/component-definition.interface';
 import { IComponentInstance } from '../interfaces/component-instance.interface';
 
@@ -16,6 +17,7 @@ export class MetaData {
 
         return object[this._META_PROPERTY_NAME][metaKey];
     }
+
     public set(object: IComponentDefinition | IComponentInstance, metaKey: string, value: unknown): void {
         if (!(this._META_PROPERTY_NAME in object)) {
             object[this._META_PROPERTY_NAME] = {};
