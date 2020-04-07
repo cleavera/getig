@@ -1,7 +1,7 @@
-import { IPromiseRejector, IPromiseResolver, Maybe } from '@cleavera/types';
+import { Maybe } from '@cleavera/types';
 import { isNull } from '@cleavera/utils';
 import { createHash, Hash } from 'crypto';
-import { readFile } from 'fs';
+import { promises as fs } from 'fs';
 
 import { IResource } from '../interfaces/resource.interface';
 
@@ -15,28 +15,20 @@ export class Resource implements IResource {
     }
 
     public static async FromFilePath(path: string, targetPath: Maybe<string> = null): Promise<Resource> {
-        return new Promise<Resource>((resolve: IPromiseResolver<Resource>, reject: IPromiseRejector): void => {
-            readFile(path, (err: Maybe<NodeJS.ErrnoException> = null, content: Buffer): void => {
-                if (!isNull(err)) {
-                    reject(err);
-                }
+        const content: Buffer = await fs.readFile(path);
 
-                if (!isNull(targetPath)) {
-                    resolve(new Resource(targetPath, content));
+        if (!isNull(targetPath)) {
+            return new Resource(targetPath, content);
+        }
 
-                    return;
-                }
+        const hash: Hash = createHash('md5');
 
-                const hash: Hash = createHash('md5');
+        hash.update(content);
 
-                hash.update(content);
+        const name: string = hash.digest('hex');
+        const extension: string = path.substring(path.lastIndexOf('.'));
 
-                const name: string = hash.digest('hex');
-                const extension: string = path.substring(path.lastIndexOf('.'));
-
-                resolve(new Resource(`/resources/${name}${extension}`, content));
-            });
-        });
+        return new Resource(`/resources/${name}${extension}`, content);
     }
 
     public static FromString(content: string, extension: string, targetPath?: null): Resource;
@@ -54,6 +46,6 @@ export class Resource implements IResource {
 
         const name: string = hash.digest('hex');
 
-        return new Resource(`/resources/${name}.${extension}`, convertedContent);
+        return new Resource(`/resources/${name}.${extension as string}`, convertedContent);
     }
 }

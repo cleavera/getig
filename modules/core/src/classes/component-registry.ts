@@ -108,16 +108,8 @@ export class ComponentRegistry {
             template = await stringReplace(
                 template,
                 new RegExp(`@{${component.name}\\(((?:[A-z0-9-_]+?(?:,(?:\\s)?)?)*)\\)}`, 'g'),
-                async([_match, args]: RegExpExecArray): Promise<string> => {
-                    const params: Array<unknown> = args.split(/,\s?/g).map((param: string): unknown => {
-                        for (const c of components) {
-                            if (c.name === param) {
-                                return c;
-                            }
-                        }
-
-                        return context[param];
-                    });
+                async([, args]: RegExpExecArray): Promise<string> => {
+                    const params: Array<unknown> = this._parseParams(args.split(/,\s?/g), context, components);
 
                     LOGGER.silly(`Loading child component ${component.name} with arguments ${JSON.stringify(params)}`);
 
@@ -125,7 +117,7 @@ export class ComponentRegistry {
 
                     this.addInstance(context, comp);
 
-                    return await this.render(comp);
+                    return this.render(comp);
                 }
             );
         }
@@ -181,7 +173,7 @@ export class ComponentRegistry {
         const out: Array<IComponentDefinition> = [];
 
         for (const component in components) {
-            if (!components.hasOwnProperty(component)) {
+            if (!Object.prototype.hasOwnProperty.call(components, component)) {
                 continue;
             }
 
@@ -269,5 +261,17 @@ export class ComponentRegistry {
         }
 
         return components;
+    }
+
+    private _parseParams(args: Array<string>, context: IComponentInstance, components: Array<IComponentDefinition>): Array<unknown> {
+        return args.map((param: string): unknown => {
+            for (const c of components) {
+                if (c.name === param) {
+                    return c;
+                }
+            }
+
+            return context[param];
+        });
     }
 }

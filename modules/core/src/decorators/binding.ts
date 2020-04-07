@@ -6,7 +6,7 @@ import { LOGGER } from '../constants/logger.constant';
 export function Binding(): PropertyDecorator {
     return (componentDefinition: any, propertyKey: string | symbol): void => { // eslint-disable-line @typescript-eslint/no-explicit-any
         if (!isString(propertyKey)) {
-            LOGGER.error(new Error(`Property key must be a symbol ${componentDefinition.constructor.name}.${propertyKey.toString()}`));
+            LOGGER.error(new Error(`Property key must be a symbol ${(componentDefinition as Object).constructor.name}.${propertyKey.toString()}`));
 
             return process.exit(1);
         }

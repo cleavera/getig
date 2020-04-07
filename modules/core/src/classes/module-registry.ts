@@ -44,21 +44,21 @@ export class ModuleRegistry {
 
     public async generate(moduleInstance: IModuleInstance, basePath: string = process.cwd()): Promise<void> {
         if (!isUndefined(moduleInstance.beforeGenerate)) {
-            LOGGER.silly(`Running beforeGenerate lifecycle hook for ${moduleInstance.constructor.name}`);
+            LOGGER.silly(`Running beforeGenerate lifecycle hook for ${(moduleInstance as Object).constructor.name}`);
             await moduleInstance.beforeGenerate();
         }
 
         const modulePath: Maybe<string> = this.getPath(moduleInstance.constructor);
 
         if (isNull(modulePath)) {
-            LOGGER.error(new Error(`Module needs a path ${moduleInstance}`));
+            LOGGER.error(new Error(`Module needs a path ${JSON.stringify(moduleInstance)}`));
 
             return process.exit(1);
         }
 
         basePath = join(basePath, modulePath);
 
-        LOGGER.info(`Creating module ${moduleInstance.constructor.name} at ${basePath}`);
+        LOGGER.info(`Creating module ${(moduleInstance as Object).constructor.name} at ${basePath}`);
 
         await $createDirectory(basePath);
 
