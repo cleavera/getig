@@ -2,6 +2,7 @@ import { $readFile } from '@cleavera/fs';
 import { DynamicComponent, IfComponent } from '@getig/common';
 import { Binding, Component, IComponentDefinition } from '@getig/core';
 import { join } from 'path';
+
 import { $loadStyle } from '../../helpers/load-style';
 import { HeaderComponent } from '../header/header.component';
 

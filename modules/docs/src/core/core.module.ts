@@ -1,5 +1,6 @@
 import { Module, Page, Resource } from '@getig/core';
 import { join } from 'path';
+
 import { DocsModule } from '../docs';
 import { GuidesModule } from '../guides';
 import { PageComponent } from '../shared';
@@ -16,8 +17,7 @@ import { HomeComponent } from './components/home/home.component';
         DocsModule,
         GuidesModule
     ],
-    resources: [
-        Resource.FromFilePath(join(__dirname, './resources/favicon.ico'), './favicon.ico')
-    ]
+    resources: [Resource.FromFilePath(join(__dirname, './resources/favicon.ico'), './favicon.ico')]
 })
-export class CoreModule {}
+export class CoreModule {
+}
