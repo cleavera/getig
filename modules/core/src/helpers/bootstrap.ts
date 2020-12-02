@@ -1,6 +1,7 @@
-import { $createDirectory, $writeFile } from '@cleavera/fs';
+import { $writeFile } from '@cleavera/fs';
 import { LogLevel } from '@cleavera/types';
-import { join } from 'path';
+import { promises as fs } from 'fs';
+import { dirname, join } from 'path';
 
 import { LOGGER } from '../constants/logger.constant';
 import { MODULE_REGISTRY } from '../constants/module-registry.constant';
@@ -13,10 +14,22 @@ export async function $bootstrap(module: IComponentDefinition, basePath: string 
 
     await MODULE_REGISTRY.generate(new module(), basePath);
 
-    await $createDirectory(join(basePath, 'resources'));
-
     for (const resource of RESOURCE_STORE.getResources()) {
         const { url, content }: IResource = await resource;
+        const path: string = join(basePath, url);
+        const directory: string = dirname(path);
+
+        try {
+            await fs.access(directory);
+        } catch (error) {
+            if (error.code === 'ENOENT') {
+                await fs.mkdir(directory, {
+                    recursive: true
+                });
+            } else {
+                throw error;
+            }
+        }
 
         await $writeFile(join(basePath, url), content);
     }
