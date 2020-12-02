@@ -15,6 +15,10 @@
   "author": "Anthony Cleaver",
   "license": "ISC",
   "private": true,
+  "peerDependencies": {
+    "@getig/common": "*",
+    "@getig/core": "*"
+  },
   "devDependencies": {
     "@cleavera/config": "^2.4.0",
     "@cleavera/debug": "^1.0.1",

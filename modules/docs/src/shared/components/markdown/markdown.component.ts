@@ -24,6 +24,7 @@ export class MarkdownComponent {
     private async _parseMarkdown(markdown: Asyncable<string>, basePath: string): Promise<string> {
         const content: string = $parseMarkdown(await markdown) ?? '';
 
+        /* eslint-disable-next-line array-element-newline */
         return await stringReplace(content, /<img(?:[\s\S]+?)src="(.+?)"/g, async([match, filePath]: RegExpExecArray): Promise<string> => {
             let resource: Maybe<Resource> = null;
 

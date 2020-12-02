@@ -17,7 +17,9 @@ import { HomeComponent } from './components/home/home.component';
         DocsModule,
         GuidesModule
     ],
-    resources: [Resource.FromFilePath(join(__dirname, './resources/favicon.ico'), './favicon.ico')]
+    resources: [
+        Resource.FromFilePath(join(__dirname, './resources/favicon.ico'), './favicon.ico')
+    ]
 })
 export class CoreModule {
 }
