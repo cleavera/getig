@@ -2,6 +2,7 @@ import { $readFile } from '@cleavera/fs';
 import { $componentFactory, DynamicComponent } from '@getig/common';
 import { Binding, Component, COMPONENT_REGISTRY, IBeforeRender, IComponentDefinition } from '@getig/core';
 import { join } from 'path';
+
 import { MarkdownComponent } from '../../components/markdown/markdown.component';
 import { CONTENT_BASE_PATH } from '../../constants/content-base-path.constant';
 import { $loadStyle } from '../../helpers/load-style';
@@ -27,9 +28,9 @@ export class ConceptComponent implements IBeforeRender {
     @Binding()
     public title: string;
 
-    private _markdown: string;
-    private _modulePath: string;
-    private _interpolatableComponents: Array<IComponentDefinition>;
+    private readonly _markdown: string;
+    private readonly _modulePath: string;
+    private readonly _interpolatableComponents: Array<IComponentDefinition>;
 
     constructor(markdown: string, title: string, pages: Array<IConceptPage>, modulePath: string, interpolatableComponents: Array<IComponentDefinition> = []) {
         this.navigationComponent = $componentFactory(ModuleNavComponent, pages, modulePath);

@@ -1,4 +1,5 @@
 import { IPage, Module, MODULE_REGISTRY } from '@getig/core';
+
 import { $generatePages } from '../shared';
 
 @Module({

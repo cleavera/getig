@@ -1,7 +1,9 @@
 import { $readFile } from '@cleavera/fs';
-import { $stringReplace, Asyncable } from '@cleavera/utils';
+import { Asyncable, Maybe } from '@cleavera/types';
+import { stringReplace } from '@cleavera/utils';
 import { Binding, Component, Resource, RESOURCE_STORE } from '@getig/core';
 import { join } from 'path';
+
 import { LOGGER } from '../../constants/logger.constant';
 import { $getContentPath } from '../../helpers/get-content-path';
 import { $loadStyle } from '../../helpers/load-style';
@@ -20,10 +22,11 @@ export class MarkdownComponent {
     }
 
     private async _parseMarkdown(markdown: Asyncable<string>, basePath: string): Promise<string> {
-        const content: string = $parseMarkdown(await markdown) || '';
+        const content: string = $parseMarkdown(await markdown) ?? '';
 
-        return await $stringReplace(content, /<img(?:[\s\S]+?)src="(.+?)"/g, async(match: string, filePath: string): Promise<string> => {
-            let resource: Resource;
+        /* eslint-disable-next-line array-element-newline */
+        return await stringReplace(content, /<img(?:[\s\S]+?)src="(.+?)"/g, async([match, filePath]: RegExpExecArray): Promise<string> => {
+            let resource: Maybe<Resource> = null;
 
             try {
                 resource = await Resource.FromFilePath($getContentPath(join(basePath, filePath)));
