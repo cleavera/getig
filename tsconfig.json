@@ -1,6 +1,10 @@
 {
-  "extends": "@cleavera/config/tsconfig.json",
   "compilerOptions": {
-    "declaration": true
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "strict": true,
+    "declaration": true,
+    "experimentalDecorators": true
   }
 }

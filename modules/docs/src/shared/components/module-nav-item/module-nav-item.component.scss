@@ -1,21 +1,19 @@
-@import "../../styles/index";
-
 .ModuleNavItem {
   &-href {
-    color: $color-primary;
+    color: var(--color-primary);
     display: block;
     padding: 10px;
     text-decoration: none;
 
     &:focus,
     &:hover {
-      color: $color-primary-accent;
-      outline: 1px $color-primary-accent inset;
+      color: var(--color-primary-accent);
+      outline: 1px var(--color-primary-accent) inset;
     }
 
     &.is-active {
-      background: $color-primary-accent;
-      color: $color-font-invert;
+      background: var(--color-primary-accent);
+      color: var(--color-font-invert);
     }
   }
 }

@@ -1,7 +1,5 @@
-@import "../../styles/index";
-
 .ModuleNav {
-  box-shadow: 0 0 5px 0 $color-shading-accent;
+  box-shadow: 0 0 5px 0 var(--color-shading-accent);
   display: flex;
   list-style: none;
   justify-content: center;

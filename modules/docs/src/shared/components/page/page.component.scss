@@ -1,12 +1,27 @@
-@import "../../styles/index";
-
 :root {
-  font-family: $font-family-body;
+  --color-primary: #0C2e65;
+  --color-primary-accent: #24598c;
+
+  --color-secondary: #FF7F27;
+
+  --color-font: #111111;
+  --color-font-invert: #f0f0f0;
+  --color-font-title: #333333;
+
+  --color-shading: #333333;
+  --color-shading-accent: #cccccc;
+
+  --color-background: #ffffff;
+  --color-background-accent: #f0f0f0;
+
+  --font-family-title: "Century Gothic", sans-serif;
+
+  font-family: "open-sans", sans-serif;
   font-size: 100%;
 }
 
 body {
-  background: $color-background;
+  background: var(--color-background);
   margin: 0;
   padding: 0;
 }

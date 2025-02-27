@@ -1,9 +1,7 @@
-@import "../../styles/index";
-
 .Concept {
   &-header {
-    background: $color-background-accent;
-    box-shadow: 0 0 5px 0 $color-shading;
+    background: var(--color-background-accent);
+    box-shadow: 0 0 5px 0 var(--color-shading);
   }
 
   &-headerWrapper {
@@ -15,13 +13,13 @@
   }
 
   &-title {
-    color: $color-font-title;
-    font-family: $font-family-title;
+    color: var(--color-font-title);
+    font-family: var(--font-family-title);
     font-size: 2rem;
     font-weight: 100;
     margin: 0;
 
-    @include media(600px) {
+    @media screen and (min-width: 600px) {
       font-size: 3.5rem;
     }
   }
