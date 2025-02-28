@@ -5,9 +5,9 @@ import { IResource } from '../interfaces/resource.interface';
 
 export class Resource implements IResource {
     public url: string;
-    public content: Buffer;
+    public content: Uint8Array;
 
-    private constructor(url: string, content: Buffer) {
+    private constructor(url: string, content: Uint8Array) {
         this.url = url;
         this.content = content;
     }

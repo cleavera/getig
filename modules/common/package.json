@@ -4,25 +4,28 @@
   "description": "Common module for getig",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc && copyfiles -u 1 src/**/*.component.html dist",
+    "build": "tsc",
     "clean": "git clean -X -f -d --exclude=\"!node_modules\"",
     "lint": "npx eslint ./src/**/*.ts",
-    "prepack": "npm run clean && npm run lint && npm run build"
+    "prepack": "npm run clean && npm run lint && npm run build",
+    "update-dependencies": "npx gosod ../../modules/core"
   },
   "author": "Anthony Cleaver",
   "license": "ISC",
   "devDependencies": {
     "@cleavera/config": "^2.4.0",
-    "@getig/core": "^1.0.0",
-    "@types/node": "^13.11.0",
     "@typescript-eslint/eslint-plugin": "^2.27.0",
     "@typescript-eslint/parser": "^2.27.0",
-    "copyfiles": "^2.2.0",
     "eslint": "^6.8.0",
     "eslint-plugin-import": "^2.20.2",
     "typescript": "^3.8.3"
   },
   "peerDependencies": {
-    "@getig/core": "^0.6.0"
+    "@getig/core": "1.0.0"
+  },
+  "peerDependenciesOptions": {
+    "@getig/core": {
+      "optional": true
+    }
   }
 }

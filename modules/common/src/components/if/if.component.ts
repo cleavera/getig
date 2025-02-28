@@ -1,9 +1,7 @@
 import { Binding, Component, COMPONENT_REGISTRY, IComponentDefinition } from '@getig/core';
-import { join } from 'path';
-import { readfile } from '../../helpers/read-file';
 
 @Component({
-    template: readfile(join(__dirname, './if.component.html'))
+    template: `#{content}`
 })
 export class IfComponent<T = unknown> {
     @Binding()

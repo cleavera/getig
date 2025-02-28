@@ -1,4 +1,4 @@
 export interface IResource {
     url: string;
-    content: Buffer;
+    content: Uint8Array;
 }
