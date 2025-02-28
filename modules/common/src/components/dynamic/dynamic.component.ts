@@ -1,9 +1,9 @@
-import { $readFile } from '@cleavera/fs';
 import { Binding, Component, COMPONENT_REGISTRY, IComponentDefinition } from '@getig/core';
 import { join } from 'path';
+import { readfile } from '../../helpers/read-file';
 
 @Component({
-    template: $readFile(join(__dirname, './dynamic.component.html'))
+    template: readfile(join(__dirname, './dynamic.component.html'))
 })
 export class DynamicComponent<T = unknown> {
     @Binding()

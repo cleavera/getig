@@ -1,10 +1,9 @@
-import { $readFile } from '@cleavera/fs';
-import { Asyncable } from '@cleavera/types';
 import { Binding, Component, COMPONENT_REGISTRY, IComponentDefinition } from '@getig/core';
 import { join } from 'path';
+import { readfile } from '../../helpers/read-file';
 
 @Component({
-    template: $readFile(join(__dirname, './repeat.component.html'))
+    template: readfile(join(__dirname, './repeat.component.html'))
 })
 export class RepeatComponent<T = unknown> {
     @Binding()
@@ -15,7 +14,7 @@ export class RepeatComponent<T = unknown> {
         this.content = this._renderComponents(items, component);
     }
 
-    private async _renderComponents(items: Asyncable<Array<unknown>>, component: { new(arg: unknown): T; }): Promise<string> {
+    private async _renderComponents(items: Array<unknown> | Promise<Array<unknown>>, component: { new(arg: unknown): T; }): Promise<string> {
         const values: Array<string> = await Promise.all((await items).map(async(item: unknown) => {
             const instance: T = new component(item);
 

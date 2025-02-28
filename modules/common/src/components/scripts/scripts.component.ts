@@ -1,4 +1,3 @@
-import { IDict } from '@cleavera/types';
 import { Binding, Component, COMPONENT_REGISTRY, IComponentDefinition, IComponentInstance, IOnRender, Resource, RESOURCE_STORE } from '@getig/core';
 
 @Component({
@@ -23,7 +22,7 @@ export class ScriptsComponent implements IOnRender {
     }
 
     private async _getScripts(components: Array<IComponentDefinition>): Promise<Array<string>> {
-        const scripts: IDict<boolean> = {};
+        const scripts: Record<string, boolean> = {};
 
         await Promise.all(components.map(async(component: IComponentDefinition) => {
             const scriptDefinitions: Array<Promise<string>> = COMPONENT_REGISTRY.getScripts(component);

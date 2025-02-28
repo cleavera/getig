@@ -1,4 +1,3 @@
-import { Asyncable } from '@cleavera/types';
 import { Binding, Component } from '@getig/core';
 
 @Component({
@@ -8,7 +7,7 @@ export class ProjectionComponent {
     @Binding()
     public content: Promise<string>;
 
-    constructor(content: Asyncable<string>) {
+    constructor(content: string | Promise<string>) {
         this.content = Promise.resolve(content);
     }
 }

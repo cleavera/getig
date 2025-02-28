@@ -1,4 +1,3 @@
-import { IDict } from '@cleavera/types';
 import { Binding, Component, COMPONENT_REGISTRY, IComponentDefinition, IComponentInstance, IOnRender, Resource, RESOURCE_STORE } from '@getig/core';
 
 @Component({
@@ -23,7 +22,7 @@ export class StylesheetComponent implements IOnRender {
     }
 
     private async _getStyles(components: Array<IComponentDefinition>): Promise<Array<string>> {
-        const styles: IDict<boolean> = {};
+        const styles: Record<string, boolean> = {};
 
         await Promise.all(components.map(async(component: IComponentDefinition) => {
             const styleDefinitions: Array<Promise<string>> = COMPONENT_REGISTRY.getStyles(component);
