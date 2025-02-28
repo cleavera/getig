@@ -7,8 +7,8 @@
     "dev": "concurrently \"npm run watch-dependencies\" \"npm run watch-source\"",
     "compile": "ts-node src/core/index --project=\"./tsconfig.json\"",
     "clean": "git clean -X -f -d --exclude=\"!node_modules\"",
-    "update-dependencies": "gosod ../core ../common",
-    "watch-dependencies": "chokidar ../core/src/**/* ../common/src/**/* -c \"gosod ../core ../common && npm run compile\" -d=2000 --initial",
+    "update-dependencies": "gosod ../../modules/core ../../modules/common",
+    "watch-dependencies": "chokidar ../../modules/core/src/**/* ../../modules/common/src/**/* -c \"gosod ../../modules/core ../../modules/common && npm run compile\" -d=2000 --initial",
     "watch-source": "chokidar src/**/* content/**/* -c \"npm run compile\" -d=1000 --initial",
     "lint": "npx eslint ./src/**/*.ts"
   },

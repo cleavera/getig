@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <base href="/">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/resources/ccf6c1c5df55b33b0ca8c066f15ed9c5.css" rel="stylesheet">
+    <title>Quickstart guide</title>
+</head>
+<body>
+
+<main class="Page-content">
+    <div class="Layout">
+    <div class="Layout-header">
+        <div class="Header-spacer"></div>
+
+<header class="Header">
+    <a href="/index.html" class="Header-logo">
+        <img class="Header-image" src="/logo.png" alt="Getig documentation" />
+    </a>
+
+    <h1 class="Header-title">Documentation</h1>
+
+    <div class="Header-navigation">
+        <nav class="Navigation">
+    <ul class="Navigation-links">
+        <li class="Navigation-link"><a class="Navigation-href" href="/docs/index.html">Docs</a></li>
+        <li class="Navigation-link"><a class="Navigation-href" href="/guides/index.html">Guides</a></li>
+    </ul>
+</nav>
+
+    </div>
+</header>
+
+    </div>
+
+    <div class="Layout-content">
+        <article class="Concept">
+    <div class="Concept-header">
+        <div class="Concept-headerWrapper">
+            <h1 class="Concept-title">Quickstart guide</h1>
+        </div>
+
+        <ul class="ModuleNav">
+    <li class="ModuleNavItem">
+    <a href="/guides/quickstart.html" class="ModuleNavItem-href" data-module-nav-item>Quickstart guide</a>
+</li>
+
+
+</ul>
+
+
+    </div>
+
+    <div class="Content">
+    <div class="Markdown">
+    <pre><code class="language-typescript">import { $bootstrap, Module, Page, Resource } from '@getig/core';
+import { $componentFactory, StylesheetComponent } from '@getig/common';
+import { join, resolve } from 'path';
+import { Binding, Component, IComponentDefinition } from '@getig/core';
+import { MarkdownComponent } from '../../../shared';
+
+@Component({
+    template: `
+        &lt;!DOCTYPE HTML&gt;
+        &lt;html&gt;
+        &lt;head&gt;
+            &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+            <link href="/resources/ccf6c1c5df55b33b0ca8c066f15ed9c5.css" rel="stylesheet">
+            &lt;title&gt;Getig example&lt;/title&gt;
+        &lt;/head&gt;
+        &lt;body&gt;
+            &lt;h1&gt;Getig example&lt;/h1
+            
+            &lt;p&gt;This is an example page&lt;/p&gt;
+        &lt;/body&gt;
+        &lt;/html&gt;`,
+    styles: `
+        h1 {
+            color: red;
+        }
+    `,
+    components: [
+        StylesheetComponent
+    ]
+})
+export class HomeComponent {
+    @Binding()
+    public contentComponent: IComponentDefinition;
+
+    constructor() {
+        this.contentComponent = $componentFactory(MarkdownComponent, 'index.md');
+    }
+}
+
+@Module({
+    path: '/',
+    pages: [
+        Page.Create('index.html', new HomeComponent())
+    ],
+    children: [],
+    resources: [
+        Resource.FromFilePath(join(__dirname, './resources/favicon.ico'), './favicon.ico')
+    ]
+})
+export class CoreModule {}
+
+$bootstrap(CoreModule, resolve('../dist')).catch((e: Error) =&gt; {
+    throw e;
+});
+</code></pre>
+
+</div>
+
+
+</div>
+
+</article>
+
+
+    </div>
+</div>
+
+</main>
+
+<script src="/resources/13d46a5a9567acf81dde20ceac99e752.js"></script>
+</body>
+</html>

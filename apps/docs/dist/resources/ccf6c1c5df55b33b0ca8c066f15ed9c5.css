@@ -1,0 +1,155 @@
+.Layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.Layout-header {
+  width: 100%;
+}
+.Layout-content {
+  flex: 1 0 auto;
+}
+.Header {
+  align-items: center;
+  background: linear-gradient(var(--color-primary), var(--color-primary-accent));
+  box-shadow: 0 0 5px 0 var(--color-shading);
+  color: var(--color-font-invert);
+  display: flex;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+.Header-image {
+  flex: 0 1 60%;
+  max-height: 100%;
+}
+.Header-logo {
+  align-items: center;
+  display: flex;
+  height: 80px;
+  justify-content: center;
+}
+.Header-title {
+  display: none;
+  font-family: var(--font-family-title);
+  font-size: 1rem;
+  margin: 0;
+  text-transform: uppercase;
+}
+@media screen and (min-width: 525px) {
+  .Header-title {
+    display: block;
+  }
+}
+.Header-navigation {
+  display: flex;
+  flex: 1 0 auto;
+  justify-content: flex-end;
+}
+.Header-spacer {
+  height: 80px;
+}
+.Navigation-links {
+  display: flex;
+  list-style: none;
+  justify-content: flex-end;
+  margin: 0;
+  padding: 0;
+}
+.Navigation-href {
+  color: var(--color-font-invert);
+  display: block;
+  font-size: 0.8rem;
+  padding: 10px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+@media screen and (min-width: 400px) {
+  .Navigation-href {
+    padding: 10px 50px;
+  }
+}
+.Concept-header {
+  background: var(--color-background-accent);
+  box-shadow: 0 0 5px 0 var(--color-shading);
+}
+.Concept-headerWrapper {
+  box-sizing: border-box;
+  margin: auto;
+  max-width: 900px;
+  padding: 20px;
+  width: 100%;
+}
+.Concept-title {
+  color: var(--color-font-title);
+  font-family: var(--font-family-title);
+  font-size: 2rem;
+  font-weight: 100;
+  margin: 0;
+}
+@media screen and (min-width: 600px) {
+  .Concept-title {
+    font-size: 3.5rem;
+  }
+}
+.ModuleNav {
+  box-shadow: 0 0 5px 0 var(--color-shading-accent);
+  display: flex;
+  list-style: none;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+.ModuleNavItem-href {
+  color: var(--color-primary);
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+}
+.ModuleNavItem-href:focus, .ModuleNavItem-href:hover {
+  color: var(--color-primary-accent);
+  outline: 1px var(--color-primary-accent) inset;
+}
+.ModuleNavItem-href.is-active {
+  background: var(--color-primary-accent);
+  color: var(--color-font-invert);
+}
+.Content {
+  border: 1px solid var(--color-shading-accent);
+  box-sizing: border-box;
+  margin: auto;
+  max-width: 900px;
+  padding: 20px;
+  width: 100%;
+}
+.Markdown code {
+  background: var(--color-background-accent);
+  display: block;
+  font-family: Consolas, monospace;
+  font-size: 0.8rem;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 1em;
+}
+:root {
+  --color-primary: #0C2e65;
+  --color-primary-accent: #24598c;
+  --color-secondary: #FF7F27;
+  --color-font: #111111;
+  --color-font-invert: #f0f0f0;
+  --color-font-title: #333333;
+  --color-shading: #333333;
+  --color-shading-accent: #cccccc;
+  --color-background: #ffffff;
+  --color-background-accent: #f0f0f0;
+  --font-family-title: "Century Gothic", sans-serif;
+  font-family: "open-sans", sans-serif;
+  font-size: 100%;
+}
+
+body {
+  background: var(--color-background);
+  margin: 0;
+  padding: 0;
+}
