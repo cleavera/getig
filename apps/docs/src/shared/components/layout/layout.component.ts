@@ -7,19 +7,19 @@ import { $loadStyle } from '../../helpers/load-style';
 import { HeaderComponent } from '../header/header.component';
 
 @Component({
-    template: $readFile(join(__dirname, './layout.component.html')),
-    styles: $loadStyle(join(__dirname, './layout.component.scss')),
-    components: [
-        DynamicComponent,
-        IfComponent,
-        HeaderComponent
-    ]
+  template: $readFile(join(__dirname, './layout.component.html')),
+  styles: $loadStyle(join(__dirname, './layout.component.scss')),
+  components: [
+    DynamicComponent,
+    IfComponent,
+    HeaderComponent
+  ]
 })
 export class LayoutComponent {
-    @Binding()
-    public content: IComponentDefinition;
+  @Binding()
+  public content: IComponentDefinition;
 
-    constructor(contentComponent: IComponentDefinition) {
-        this.content = contentComponent;
-    }
+  constructor(contentComponent: IComponentDefinition) {
+    this.content = contentComponent;
+  }
 }

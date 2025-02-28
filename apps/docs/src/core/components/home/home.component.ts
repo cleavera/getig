@@ -6,14 +6,14 @@ import { join } from 'path';
 import { $loadContent, ContentComponent, MarkdownComponent } from '../../../shared';
 
 @Component({
-    template: $readFile(join(__dirname, './home.component.html')),
-    components: [ContentComponent]
+  template: $readFile(join(__dirname, './home.component.html')),
+  components: [ContentComponent]
 })
 export class HomeComponent {
-    @Binding()
-    public contentComponent: IComponentDefinition;
+  @Binding()
+  public contentComponent: IComponentDefinition;
 
-    constructor() {
-        this.contentComponent = $componentFactory(MarkdownComponent, $loadContent('index.md'));
-    }
+  constructor() {
+    this.contentComponent = $componentFactory(MarkdownComponent, $loadContent('index.md'));
+  }
 }

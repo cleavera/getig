@@ -10,35 +10,34 @@ import { $loadStyle } from '../../helpers/load-style';
 import { $parseMarkdown } from '../../helpers/parse-markdown';
 
 @Component({
-    styles: $loadStyle(join(__dirname, './markdown.component.scss')),
-    template: $readFile(join(__dirname, './markdown.component.html'))
+  styles: $loadStyle(join(__dirname, './markdown.component.scss')),
+  template: $readFile(join(__dirname, './markdown.component.html'))
 })
 export class MarkdownComponent {
-    @Binding()
-    public content: Promise<string>;
+  @Binding()
+  public content: Promise<string>;
 
-    constructor(markdown: Asyncable<string>, basePath: string = './') {
-        this.content = this._parseMarkdown(markdown, basePath);
-    }
+  constructor(markdown: Asyncable<string>, basePath = './') {
+    this.content = this._parseMarkdown(markdown, basePath);
+  }
 
-    private async _parseMarkdown(markdown: Asyncable<string>, basePath: string): Promise<string> {
-        const content: string = $parseMarkdown(await markdown) ?? '';
+  private async _parseMarkdown(markdown: Asyncable<string>, basePath: string): Promise<string> {
+    const content: string = $parseMarkdown(await markdown) ?? '';
 
-        /* eslint-disable-next-line array-element-newline */
-        return await stringReplace(content, /<img(?:[\s\S]+?)src="(.+?)"/g, async([match, filePath]: RegExpExecArray): Promise<string> => {
-            let resource: Maybe<Resource> = null;
 
-            try {
-                resource = await Resource.FromFilePath($getContentPath(join(basePath, filePath)));
-            } catch (e) {
-                LOGGER.warn(e); // tslint:disable-line no-console
+    return await stringReplace(content, /<img(?:[\s\S]+?)src="(.+?)"/g, async ([match, filePath]: RegExpExecArray): Promise<string> => {
+      let resource: Maybe<Resource> = null;
 
-                return match;
-            }
+      try {
+        resource = await Resource.FromFilePath($getContentPath(join(basePath, filePath)));
+      } catch (e) {
+        LOGGER.warn(e);
+        return match;
+      }
 
-            RESOURCE_STORE.addResource(resource);
+      RESOURCE_STORE.addResource(resource);
 
-            return `${match.replace(filePath, resource.url)}`;
-        });
-    }
+      return match.replace(filePath, resource.url);
+    });
+  }
 }

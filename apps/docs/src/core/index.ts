@@ -10,11 +10,11 @@ LOGGER.configure(Logger.LogLevel.SILLY);
 
 bootstrap(CoreModule, join(ROOT, './dist')).then(() => {
     LOGGER.info('Compilation completed');
-}, (e: Error) => {
+}, (e: unknown) => {
     throw e;
 });
 
-process.on('unhandledRejection', (reason: unknown | null | undefined) => {
+process.on('unhandledRejection', (reason: unknown) => {
     if (reason instanceof Error) {
         LOGGER.error(reason);
     } else {

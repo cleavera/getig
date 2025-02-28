@@ -73,7 +73,7 @@ export class ComponentRegistry {
         LOGGER.debug(`Rendering ${componentDefinition.name}`);
 
         const template: string | null = await this.getTemplate(componentDefinition);
-        const bindings: Array<keyof IComponentInstance> = this.getBindings(componentDefinition);
+        const bindings: Array<Extract<keyof IComponentInstance, string>> = this.getBindings(componentDefinition);
         const components: Array<IComponentDefinition<IComponentInstance>> = this.getStaticComponents(componentDefinition);
 
         if (template === null) {
@@ -193,7 +193,7 @@ export class ComponentRegistry {
         this._registry.set(componentDefinition, 'bindings', bindings);
     }
 
-    public getBindings(componentDefinition: IComponentDefinition): Array<keyof IComponentInstance> {
+    public getBindings(componentDefinition: IComponentDefinition): Array<Extract<keyof IComponentInstance, string>> {
         return this._registry.get(componentDefinition, 'bindings') ?? [];
     }
 
@@ -249,7 +249,7 @@ export class ComponentRegistry {
         }, []);
     }
 
-    public getParent(childInstance: IComponentInstance): IComponentInstance | null {
+    public getParent(childInstance: IComponentInstance): IComponentInstance | null { // eslint-disable-line @typescript-eslint/no-redundant-type-constituents
         return this._registry.get(childInstance, 'parent');
     }
 

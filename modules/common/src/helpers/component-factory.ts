@@ -1,6 +1,6 @@
 import { Binding, Component, COMPONENT_REGISTRY, IComponentDefinition, IComponentInstance } from '@getig/core';
 
-export function $componentFactory(componentDefinition: IComponentDefinition, ...args: Array<unknown>): IComponentDefinition {
+export function $componentFactory(componentDefinition: IComponentDefinition<IComponentInstance>, ...args: Array<unknown>): IComponentDefinition {
     @Component({
         template: '#{content}'
     })

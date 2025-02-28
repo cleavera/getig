@@ -6,14 +6,14 @@ import { join } from 'path';
 import { $loadContent, ContentComponent, MarkdownComponent } from '../../../shared';
 
 @Component({
-    template: $readFile(join(__dirname, './error.component.html')),
-    components: [ContentComponent]
+  template: $readFile(join(__dirname, './error.component.html')),
+  components: [ContentComponent]
 })
 export class ErrorComponent {
-    @Binding()
-    public content: IComponentDefinition;
+  @Binding()
+  public content: IComponentDefinition;
 
-    constructor() {
-        this.content = $componentFactory(MarkdownComponent, $loadContent('error.md'));
-    }
+  constructor() {
+    this.content = $componentFactory(MarkdownComponent, $loadContent('error.md'));
+  }
 }

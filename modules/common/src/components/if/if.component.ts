@@ -3,7 +3,7 @@ import { Binding, Component, COMPONENT_REGISTRY, IComponentDefinition } from '@g
 @Component({
     template: `#{content}`
 })
-export class IfComponent<T = unknown> {
+export class IfComponent<T extends object = object> {
     @Binding()
     public content: Promise<string>;
 

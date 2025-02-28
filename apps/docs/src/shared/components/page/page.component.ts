@@ -7,25 +7,25 @@ import { $loadStyle } from '../../helpers/load-style';
 import { LayoutComponent } from '../layout/layout.component';
 
 @Component({
-    template: $readFile(join(__dirname, './page.component.html')),
-    styles: $loadStyle(join(__dirname, './page.component.scss')),
-    components: [
-        StylesheetComponent,
-        ScriptsComponent,
-        LayoutComponent,
-        DynamicComponent
-    ]
+  template: $readFile(join(__dirname, './page.component.html')),
+  styles: $loadStyle(join(__dirname, './page.component.scss')),
+  components: [
+    StylesheetComponent,
+    ScriptsComponent,
+    LayoutComponent,
+    DynamicComponent
+  ]
 })
 export class PageComponent {
-    @Binding()
-    public title: string;
+  @Binding()
+  public title: string;
 
-    @Binding()
-    public contentComponent: IComponentDefinition;
+  @Binding()
+  public contentComponent: IComponentDefinition;
 
-    constructor(title: string, componentDefinition: IComponentDefinition) {
-        this.title = title;
+  constructor(title: string, componentDefinition: IComponentDefinition) {
+    this.title = title;
 
-        this.contentComponent = componentDefinition;
-    }
+    this.contentComponent = componentDefinition;
+  }
 }

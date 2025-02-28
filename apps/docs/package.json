@@ -5,9 +5,9 @@
   "scripts": {
     "build": "npm run clean && npm run update-dependencies && npm run lint && npm run compile",
     "dev": "concurrently \"npm run watch-dependencies\" \"npm run watch-source\"",
-    "compile": "ts-node src/core/index --project=\"./tsconfig.json\"",
+    "compile": "npx ts-node src/core/index --project=\"./tsconfig.json\"",
     "clean": "git clean -X -f -d --exclude=\"!node_modules\"",
-    "update-dependencies": "gosod ../../modules/core ../../modules/common",
+    "update-dependencies": "npx gosod ../../modules/core ../../modules/common",
     "watch-dependencies": "chokidar ../../modules/core/src/**/* ../../modules/common/src/**/* -c \"gosod ../../modules/core ../../modules/common && npm run compile\" -d=2000 --initial",
     "watch-source": "chokidar src/**/* content/**/* -c \"npm run compile\" -d=1000 --initial",
     "lint": "npx eslint ./src/**/*.ts"
@@ -20,7 +20,6 @@
     "@getig/core": "*"
   },
   "devDependencies": {
-    "@cleavera/config": "^2.4.0",
     "@cleavera/debug": "^1.0.1",
     "@cleavera/fs": "^1.4.1",
     "@cleavera/types": "^1.0.3",
@@ -29,20 +28,16 @@
     "@types/markdown-it": "0.0.9",
     "@types/node": "^13.11.0",
     "@types/node-sass": "^4.11.0",
-    "@typescript-eslint/eslint-plugin": "^2.27.0",
-    "@typescript-eslint/parser": "^2.27.0",
     "chokidar-cli": "^2.1.0",
     "concurrently": "^5.1.0",
-    "eslint": "^6.8.0",
-    "eslint-plugin-import": "^2.20.2",
+    "eslint": "^9.21.0",
     "glob": "^7.1.6",
-    "gosod": "^1.1.2",
     "markdown-it": "^10.0.0",
-    "ts-node": "^8.8.2",
-    "typescript": "^3.8.3"
+    "typescript": "^5.7.3"
   },
   "dependencies": {
     "dart-sass": "^1.25.0",
-    "sass": "^1.85.1"
+    "sass": "^1.85.1",
+    "typescript-eslint": "^8.25.0"
   }
 }

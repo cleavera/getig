@@ -4,7 +4,6 @@ import { join } from 'path';
 import { COMPONENT_REGISTRY } from '../constants/component-registry.constant';
 import { LOGGER } from '../constants/logger.constant';
 import { RESOURCE_STORE } from '../constants/resource-store.constant';
-import { IComponentDefinition } from '../interfaces/component-definition.interface';
 import { IModuleDefinition } from '../interfaces/module-definition.interface';
 import { IModuleInstance } from '../interfaces/module-instance.interface';
 import { IPage } from '../interfaces/page.interface';
@@ -118,25 +117,25 @@ export class ModuleRegistry {
         return staticPages.concat(dynamicPages);
     }
 
-    public addChild(moduleDefinition: IModuleDefinition, child: IComponentDefinition): void {
-        const children: Array<IComponentDefinition> = this._registry.get(moduleDefinition, 'children') ?? [];
+    public addChild(moduleDefinition: IModuleDefinition, child: IModuleDefinition): void {
+        const children: Array<IModuleDefinition> = this._registry.get(moduleDefinition, 'children') ?? [];
 
         children.push(child);
 
         this._registry.set(moduleDefinition, 'children', children);
     }
 
-    public addDynamicChild(moduleInstance: IModuleInstance, child: IComponentDefinition): void {
-        const children: Array<IComponentDefinition> = this._registry.get(moduleInstance, 'children') ?? [];
+    public addDynamicChild(moduleInstance: IModuleInstance, child: IModuleDefinition): void {
+        const children: Array<IModuleDefinition> = this._registry.get(moduleInstance, 'children') ?? [];
 
         children.push(child);
 
         this._registry.set(moduleInstance, 'children', children);
     }
 
-    public getChildren(moduleInstance: IModuleInstance): Array<IComponentDefinition> {
-        const staticChildren: Array<IComponentDefinition> = this._registry.get(moduleInstance.constructor, 'children') ?? [];
-        const dynamicChildren: Array<IComponentDefinition> = this._registry.get(moduleInstance, 'children') ?? [];
+    public getChildren(moduleInstance: IModuleInstance): Array<IModuleDefinition> {
+        const staticChildren: Array<IModuleDefinition> = this._registry.get(moduleInstance.constructor, 'children') ?? [];
+        const dynamicChildren: Array<IModuleDefinition> = this._registry.get(moduleInstance, 'children') ?? [];
 
         return staticChildren.concat(dynamicChildren);
     }

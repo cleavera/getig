@@ -3,7 +3,7 @@ import { Binding, Component, COMPONENT_REGISTRY, IComponentDefinition } from '@g
 @Component({
     template: `#{content}`
 })
-export class DynamicComponent<T = unknown> {
+export class DynamicComponent<T extends object = object> {
     @Binding()
     public content: Promise<string>;
 

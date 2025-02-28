@@ -3,7 +3,7 @@ import { Binding, Component, COMPONENT_REGISTRY, IComponentDefinition } from '@g
 @Component({
     template: '#{content}'
 })
-export class RepeatComponent<T = unknown> {
+export class RepeatComponent<T extends object = object> {
     @Binding()
     public content: Promise<string>;
 
@@ -12,7 +12,7 @@ export class RepeatComponent<T = unknown> {
         this.content = this._renderComponents(items, component);
     }
 
-    private async _renderComponents(items: Array<unknown> | Promise<Array<unknown>>, component: { new(arg: unknown): T; }): Promise<string> {
+    private async _renderComponents(items: Array<unknown> | Promise<Array<unknown>>, component: new(arg: unknown) => T): Promise<string> {
         const values: Array<string> = await Promise.all((await items).map(async(item: unknown) => {
             const instance: T = new component(item);
 
