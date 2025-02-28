@@ -1,5 +1,3 @@
-import { Maybe } from '@cleavera/types';
-
 import { IComponentDefinition } from '../interfaces/component-definition.interface';
 import { IComponentInstance } from '../interfaces/component-instance.interface';
 
@@ -10,7 +8,7 @@ export class MetaData {
         this._META_PROPERTY_NAME = Symbol(description);
     }
 
-    public get<T = unknown>(object: IComponentDefinition | IComponentInstance, metaKey: string): Maybe<T> {
+    public get<T = unknown>(object: IComponentDefinition | IComponentInstance, metaKey: string): T | null {
         if (!(this._META_PROPERTY_NAME in object)) {
             object[this._META_PROPERTY_NAME] = {};
         }

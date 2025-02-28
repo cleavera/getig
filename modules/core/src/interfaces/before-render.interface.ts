@@ -1,5 +1,3 @@
-import { Asyncable } from '@cleavera/types';
-
 export interface IBeforeRender {
-    beforeRender(): Asyncable<void>;
+    beforeRender(): void | Promise<void>;
 }

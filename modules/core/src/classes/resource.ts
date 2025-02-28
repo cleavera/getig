@@ -1,5 +1,3 @@
-import { Maybe } from '@cleavera/types';
-import { isNull } from '@cleavera/utils';
 import { createHash, Hash } from 'crypto';
 import { promises as fs } from 'fs';
 
@@ -14,10 +12,10 @@ export class Resource implements IResource {
         this.content = content;
     }
 
-    public static async FromFilePath(path: string, targetPath: Maybe<string> = null): Promise<Resource> {
+    public static async FromFilePath(path: string, targetPath: string | null = null): Promise<Resource> {
         const content: Buffer = await fs.readFile(path);
 
-        if (!isNull(targetPath)) {
+        if (targetPath !== null) {
             return new Resource(targetPath, content);
         }
 
@@ -33,10 +31,10 @@ export class Resource implements IResource {
 
     public static FromString(content: string, extension: string, targetPath?: null): Resource;
     public static FromString(content: string, extension: null, targetPath: string): Resource;
-    public static FromString(content: string, extension: Maybe<string> = null, targetPath: Maybe<string> = null): Resource {
+    public static FromString(content: string, extension: string | null = null, targetPath: string | null = null): Resource {
         const convertedContent: Buffer = Buffer.from(content, 'utf8');
 
-        if (!isNull(targetPath)) {
+        if (targetPath !== null) {
             return new Resource(targetPath, convertedContent);
         }
 

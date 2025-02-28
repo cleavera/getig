@@ -1,5 +1,3 @@
-import { Asyncable } from '@cleavera/types';
-
 import { IResource } from '../interfaces/resource.interface';
 
 export class ResourceStore {
@@ -9,7 +7,7 @@ export class ResourceStore {
         this._store = [];
     }
 
-    public addResource(resource: Asyncable<IResource>): void {
+    public addResource(resource: IResource | Promise<IResource>): void {
         this._store.push(Promise.resolve(resource));
     }
 

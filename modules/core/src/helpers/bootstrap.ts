@@ -1,8 +1,7 @@
-import { $writeFile } from '@cleavera/fs';
-import { LogLevel } from '@cleavera/types';
 import { promises as fs } from 'fs';
 import { dirname, join } from 'path';
 
+import { LogLevel } from '../classes/logger';
 import { LOGGER } from '../constants/logger.constant';
 import { MODULE_REGISTRY } from '../constants/module-registry.constant';
 import { RESOURCE_STORE } from '../constants/resource-store.constant';
@@ -19,18 +18,14 @@ export async function $bootstrap(module: IComponentDefinition, basePath: string 
         const path: string = join(basePath, url);
         const directory: string = dirname(path);
 
-        try {
-            await fs.access(directory);
-        } catch (error) {
-            if (error.code === 'ENOENT') {
-                await fs.mkdir(directory, {
-                    recursive: true
-                });
-            } else {
-                throw error;
+        await fs.mkdir(directory, {
+            recursive: true
+        }).catch((error: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+            if (error?.code !== 'EEXIST') {
+                return Promise.reject(error);
             }
-        }
+        });
 
-        await $writeFile(join(basePath, url), content);
+        await fs.writeFile(join(basePath, url), content);
     }
 }

@@ -1,3 +1,3 @@
-import { ConsoleLoggerFactory, Logger } from '@cleavera/debug';
+import { Logger } from '../classes/logger';
 
-export const LOGGER: Logger = ConsoleLoggerFactory();
+export const LOGGER: Logger = new Logger();

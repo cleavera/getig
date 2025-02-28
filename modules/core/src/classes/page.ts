@@ -1,5 +1,3 @@
-import { Asyncable } from '@cleavera/types';
-
 import { IComponentInstance } from '../interfaces/component-instance.interface';
 import { IPage } from '../interfaces/page.interface';
 import { IResource } from '../interfaces/resource.interface';
@@ -15,8 +13,8 @@ export class Page implements IPage {
         this.resources = resources;
     }
 
-    public static Create(fileName: string, component: IComponentInstance, resources: Array<Asyncable<IResource>> = []): Page {
-        return new Page(fileName, component, resources.map(async(resource: Asyncable<IResource>): Promise<IResource> => {
+    public static Create(fileName: string, component: IComponentInstance, resources: Array<IResource | Promise<IResource>> = []): Page {
+        return new Page(fileName, component, resources.map(async(resource: IResource | Promise<IResource>): Promise<IResource> => {
             return resource;
         }));
     }

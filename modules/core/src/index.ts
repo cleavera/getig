@@ -1,7 +1,8 @@
-export { MODULE_REGISTRY } from './constants/module-registry.constant';
-export { COMPONENT_REGISTRY } from './constants/component-registry.constant';
+export { LogLevel } from './classes/logger';
 export { Page } from './classes/page';
 export { Resource } from './classes/resource';
+export { COMPONENT_REGISTRY } from './constants/component-registry.constant';
+export { MODULE_REGISTRY } from './constants/module-registry.constant';
 export { RESOURCE_STORE } from './constants/resource-store.constant';
 export { Binding } from './decorators/binding';
 export { Component } from './decorators/component';

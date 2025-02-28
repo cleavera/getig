@@ -1,13 +1,11 @@
-import { Asyncable, OneOrMany } from '@cleavera/types';
-
 import { IComponentDefinition } from './component-definition.interface';
 import { IResource } from './resource.interface';
 
 export interface IComponentDescription {
-    template: Asyncable<string>;
-    styles?: OneOrMany<Asyncable<string>>;
-    scripts?: OneOrMany<Asyncable<string>>;
-    resources?: OneOrMany<Asyncable<IResource>>;
+    template: string | Promise<string>;
+    styles?: string | Promise<string> | Array<string | Promise<string>>;
+    scripts?: string | Promise<string> | Array<string | Promise<string>>;
+    resources?: IResource | Promise<IResource> | Array<IResource | Promise<IResource>>;
     components?: Array<IComponentDefinition>;
     isDependant?: boolean;
 }

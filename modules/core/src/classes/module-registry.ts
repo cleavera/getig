@@ -1,6 +1,4 @@
-import { $createDirectory, $writeFile } from '@cleavera/fs';
-import { Asyncable, Maybe } from '@cleavera/types';
-import { isNull, isUndefined } from '@cleavera/utils';
+import { promises as fs } from 'fs';
 import { join } from 'path';
 
 import { COMPONENT_REGISTRY } from '../constants/component-registry.constant';
@@ -25,11 +23,11 @@ export class ModuleRegistry {
         path: string,
         pages: Array<IPage> = [],
         children: Array<IModuleDefinition> = [],
-        resources: Array<Asyncable<IResource>> = []
+        resources: Array<IResource | Promise<IResource>> = []
     ): void {
         this.setPath(moduleDefinition, path);
 
-        resources.forEach((resource: Asyncable<IResource>): void => {
+        resources.forEach((resource: IResource | Promise<IResource>): void => {
             RESOURCE_STORE.addResource(resource);
         });
 
@@ -43,14 +41,14 @@ export class ModuleRegistry {
     }
 
     public async generate(moduleInstance: IModuleInstance, basePath: string = process.cwd()): Promise<void> {
-        if (!isUndefined(moduleInstance.beforeGenerate)) {
+        if ((moduleInstance.beforeGenerate ?? null) !== null) {
             LOGGER.silly(`Running beforeGenerate lifecycle hook for ${(moduleInstance as Object).constructor.name}`);
             await moduleInstance.beforeGenerate();
         }
 
-        const modulePath: Maybe<string> = this.getPath(moduleInstance.constructor);
+        const modulePath: string | null = this.getPath(moduleInstance.constructor);
 
-        if (isNull(modulePath)) {
+        if (modulePath === null) {
             LOGGER.error(new Error(`Module needs a path ${JSON.stringify(moduleInstance)}`));
 
             return process.exit(1);
@@ -60,14 +58,20 @@ export class ModuleRegistry {
 
         LOGGER.info(`Creating module ${(moduleInstance as Object).constructor.name} at ${basePath}`);
 
-        await $createDirectory(basePath);
+        await fs.rm(basePath, {
+            recursive: true,
+            force: true
+        });
+        await fs.mkdir(basePath, {
+            recursive: true
+        });
 
         for (const page of this.getPages(moduleInstance)) {
             const pagePath: string = join(basePath, page.fileName);
 
             LOGGER.info(`Creating page ${page.fileName} at ${pagePath}`);
 
-            await $writeFile(pagePath, await COMPONENT_REGISTRY.render(page.component));
+            await fs.writeFile(pagePath, await COMPONENT_REGISTRY.render(page.component));
         }
 
         for (const child of this.getChildren(moduleInstance)) {
@@ -79,7 +83,7 @@ export class ModuleRegistry {
         this._registry.set(moduleDefinition, 'path', path);
     }
 
-    public getPath(moduleDefinition: IModuleDefinition): Maybe<string> {
+    public getPath(moduleDefinition: IModuleDefinition): string | null {
         return this._registry.get(moduleDefinition, 'path');
     }
 

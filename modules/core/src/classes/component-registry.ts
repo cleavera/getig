@@ -1,8 +1,6 @@
-import { Asyncable, IDict, Maybe } from '@cleavera/types';
-import { isNull, isUndefined, stringReplace } from '@cleavera/utils';
-
 import { LOGGER } from '../constants/logger.constant';
 import { RESOURCE_STORE } from '../constants/resource-store.constant';
+import { stringReplace } from '../helpers/string-replace';
 import { IComponentDefinition } from '../interfaces/component-definition.interface';
 import { IComponentDescription } from '../interfaces/component-description.interface';
 import { IComponentInstance } from '../interfaces/component-instance.interface';
@@ -42,11 +40,11 @@ export class ComponentRegistry {
             resources = [resources];
         }
 
-        styles.forEach((style: Asyncable<string>): void => {
+        styles.forEach((style: string | Promise<string>): void => {
             this.addStyles(componentDefinition, style);
         });
 
-        scripts.forEach((script: Asyncable<string>): void => {
+        scripts.forEach((script: string | Promise<string>): void => {
             this.setScripts(componentDefinition, script);
         });
 
@@ -54,7 +52,7 @@ export class ComponentRegistry {
             this.addStaticComponent(componentDefinition, component);
         });
 
-        resources.forEach((resource: Asyncable<IResource>): void => {
+        resources.forEach((resource: IResource | Promise<IResource>): void => {
             RESOURCE_STORE.addResource(resource);
         });
 
@@ -74,23 +72,23 @@ export class ComponentRegistry {
 
         LOGGER.debug(`Rendering ${componentDefinition.name}`);
 
-        const template: Maybe<string> = await this.getTemplate(componentDefinition);
+        const template: string | null = await this.getTemplate(componentDefinition);
         const bindings: Array<string> = this.getBindings(componentDefinition);
         const components: Array<IComponentDefinition> = this.getComponents(componentDefinition);
 
-        if (isNull(template)) {
+        if (template === null) {
             LOGGER.error(new Error(`No template ${componentDefinition.name}`));
 
             return process.exit(1);
         }
 
-        if (!isUndefined(componentInstance.beforeRender)) {
+        if ((componentInstance.beforeRender ?? null) !== null) {
             LOGGER.silly(`Running beforeRender lifecycle hook for ${componentDefinition.name}`);
             await componentInstance.beforeRender();
         }
 
         return this.interpolate(componentInstance, template, bindings, components, async(): Promise<void> => {
-            if (!isUndefined(componentInstance.onRender)) {
+            if ((componentInstance.onRender ?? null) !== null) {
                 LOGGER.silly(`Running onRender lifecycle hook for ${componentDefinition.name}`);
                 await componentInstance.onRender();
             }
@@ -102,7 +100,7 @@ export class ComponentRegistry {
         template: string,
         bindings: Array<string>,
         components: Array<IComponentDefinition>,
-        onRender: Maybe<() => Asyncable<void>> = null
+        onRender: (() => void | Promise<void>) | null = null
     ): Promise<string> {
         for (const component of components) {
             template = await stringReplace(
@@ -122,7 +120,7 @@ export class ComponentRegistry {
             );
         }
 
-        if (!isNull(onRender)) {
+        if (onRender !== null) {
             await onRender();
         }
 
@@ -133,11 +131,11 @@ export class ComponentRegistry {
         return template;
     }
 
-    public setTemplate(componentDefinition: IComponentDefinition, template: Asyncable<string>): void {
+    public setTemplate(componentDefinition: IComponentDefinition, template: string | Promise<string>): void {
         this._registry.set(componentDefinition, 'template', Promise.resolve(template));
     }
 
-    public async getTemplate(componentDefinition: IComponentDefinition): Promise<Maybe<string>> {
+    public async getTemplate(componentDefinition: IComponentDefinition): Promise<string | null> {
         return Promise.resolve(this._registry.get(componentDefinition, 'template'));
     }
 
@@ -169,7 +167,7 @@ export class ComponentRegistry {
     }
 
     public getDescendants(componentInstance: IComponentInstance): Array<IComponentDefinition> {
-        const components: IDict<IComponentDefinition> = this._getRecursiveChildComponents(componentInstance);
+        const components: Record<string, IComponentDefinition> = this._getRecursiveChildComponents(componentInstance);
         const out: Array<IComponentDefinition> = [];
 
         for (const component in components) {
@@ -195,7 +193,7 @@ export class ComponentRegistry {
         return this._registry.get(componentDefinition, 'bindings') ?? [];
     }
 
-    public addStyles(componentDefinition: IComponentDefinition, styleDefinitions: Asyncable<string>): void {
+    public addStyles(componentDefinition: IComponentDefinition, styleDefinitions: string | Promise<string>): void {
         const styles: Array<Promise<string>> = this._registry.get(componentDefinition, 'styles') ?? [];
 
         styles.push(Promise.resolve(styleDefinitions));
@@ -207,7 +205,7 @@ export class ComponentRegistry {
         return this._registry.get(componentDefinition, 'styles') ?? [];
     }
 
-    public setScripts(componentDefinition: IComponentDefinition, script: Asyncable<string>): void {
+    public setScripts(componentDefinition: IComponentDefinition, script: string | Promise<string>): void {
         const scripts: Array<Promise<string>> = this._registry.get(componentDefinition, 'scripts') ?? [];
 
         scripts.push(Promise.resolve(script));
@@ -247,11 +245,11 @@ export class ComponentRegistry {
         }, []);
     }
 
-    public getParent(childInstance: IComponentInstance): Maybe<IComponentInstance> {
+    public getParent(childInstance: IComponentInstance): IComponentInstance | null {
         return this._registry.get(childInstance, 'parent');
     }
 
-    private _getRecursiveChildComponents(parentInstance: IComponentInstance, components: IDict<IComponentDefinition> = {}): IDict<IComponentDefinition> {
+    private _getRecursiveChildComponents(parentInstance: IComponentInstance, components: Record<string, IComponentDefinition> = {}): Record<string, IComponentDefinition> {
         for (const component of this.getComponents(parentInstance)) {
             components[component.toString()] = component;
 
