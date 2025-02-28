@@ -64,7 +64,7 @@ export class ComponentRegistry {
     }
 
     public getIsDependant(componentDefinition: IComponentDefinition): boolean {
-        return this._registry.get(componentDefinition, 'isDependant') ?? false;
+        return (this._registry.get(componentDefinition, 'isDependant') as boolean | null) ?? false;
     }
 
     public async render(componentInstance: IComponentInstance): Promise<string> {
@@ -73,8 +73,8 @@ export class ComponentRegistry {
         LOGGER.debug(`Rendering ${componentDefinition.name}`);
 
         const template: string | null = await this.getTemplate(componentDefinition);
-        const bindings: Array<string> = this.getBindings(componentDefinition);
-        const components: Array<IComponentDefinition> = this.getComponents(componentDefinition);
+        const bindings: Array<keyof IComponentInstance> = this.getBindings(componentDefinition);
+        const components: Array<IComponentDefinition<IComponentInstance>> = this.getStaticComponents(componentDefinition);
 
         if (template === null) {
             LOGGER.error(new Error(`No template ${componentDefinition.name}`));
@@ -84,13 +84,13 @@ export class ComponentRegistry {
 
         if ((componentInstance.beforeRender ?? null) !== null) {
             LOGGER.silly(`Running beforeRender lifecycle hook for ${componentDefinition.name}`);
-            await componentInstance.beforeRender();
+            await componentInstance.beforeRender?.();
         }
 
         return this.interpolate(componentInstance, template, bindings, components, async(): Promise<void> => {
             if ((componentInstance.onRender ?? null) !== null) {
                 LOGGER.silly(`Running onRender lifecycle hook for ${componentDefinition.name}`);
-                await componentInstance.onRender();
+                await componentInstance.onRender?.();
             }
         });
     }
@@ -98,8 +98,8 @@ export class ComponentRegistry {
     public async interpolate(
         context: IComponentInstance,
         template: string,
-        bindings: Array<string>,
-        components: Array<IComponentDefinition>,
+        bindings: Array<Extract<keyof IComponentInstance, string>>,
+        components: Array<IComponentDefinition<IComponentInstance>>,
         onRender: (() => void | Promise<void>) | null = null
     ): Promise<string> {
         for (const component of components) {
@@ -107,11 +107,11 @@ export class ComponentRegistry {
                 template,
                 new RegExp(`@{${component.name}\\(((?:[A-z0-9-_]+?(?:,(?:\\s)?)?)*)\\)}`, 'g'),
                 async([, args]: RegExpExecArray): Promise<string> => {
-                    const params: Array<unknown> = this._parseParams(args.split(/,\s?/g), context, components);
+                    const params: Array<unknown> = this._parseParams((args.split(/,\s?/g) as Array<keyof IComponentInstance>), context, components);
 
                     LOGGER.silly(`Loading child component ${component.name} with arguments ${JSON.stringify(params)}`);
 
-                    const comp: unknown = new component(...params);
+                    const comp: IComponentInstance = new component(...params);
 
                     this.addInstance(context, comp);
 
@@ -125,7 +125,7 @@ export class ComponentRegistry {
         }
 
         for (const binding of bindings) {
-            template = template.replace(new RegExp(`#{${binding}}`, 'g'), await context[binding]);
+            template = template.replace(new RegExp(`#{${binding}}`, 'g'), (await (context[binding] as unknown as Promise<string>)));
         }
 
         return template;
@@ -159,11 +159,15 @@ export class ComponentRegistry {
         this._registry.set(componentInstance, 'components', components);
     }
 
-    public getComponents(componentInstance: IComponentInstance): Array<IComponentDefinition> {
+    public getInstanceComponents(componentInstance: IComponentInstance): Array<IComponentDefinition> {
         const dynamicComponents: Array<IComponentDefinition> = this._registry.get(componentInstance, 'components') ?? [];
         const staticComponents: Array<IComponentDefinition> = this._registry.get(this.getDefinition(componentInstance), 'components') ?? [];
 
         return dynamicComponents.concat(staticComponents);
+    }
+
+    public getStaticComponents(componentDefinition: IComponentDefinition): Array<IComponentDefinition<IComponentInstance>> {
+      return this._registry.get(componentDefinition, 'components') ?? [];
     }
 
     public getDescendants(componentInstance: IComponentInstance): Array<IComponentDefinition> {
@@ -189,7 +193,7 @@ export class ComponentRegistry {
         this._registry.set(componentDefinition, 'bindings', bindings);
     }
 
-    public getBindings(componentDefinition: IComponentDefinition): Array<string> {
+    public getBindings(componentDefinition: IComponentDefinition): Array<keyof IComponentInstance> {
         return this._registry.get(componentDefinition, 'bindings') ?? [];
     }
 
@@ -225,7 +229,7 @@ export class ComponentRegistry {
         const instances: Array<IInstanceMapping> = this._registry.get(parentInstance, 'instances') ?? [];
 
         instances.push({
-            type: childInstance.constructor,
+            type: this.getDefinition(childInstance),
             instance: childInstance
         });
 
@@ -236,7 +240,7 @@ export class ComponentRegistry {
     public getInstances(parentInstance: IComponentInstance, childDefinition: IComponentDefinition): Array<IComponentInstance> {
         const instances: Array<IInstanceMapping> = this._registry.get(parentInstance, 'instances') ?? [];
 
-        return instances.reduce((filteredInstances: Array<IComponentInstance>, instance: IInstanceMapping): IComponentInstance => {
+        return instances.reduce((filteredInstances: Array<IComponentInstance>, instance: IInstanceMapping): Array<IComponentInstance> => {
             if (instance.type === childDefinition) {
                 filteredInstances.push(instance.instance);
             }
@@ -250,7 +254,7 @@ export class ComponentRegistry {
     }
 
     private _getRecursiveChildComponents(parentInstance: IComponentInstance, components: Record<string, IComponentDefinition> = {}): Record<string, IComponentDefinition> {
-        for (const component of this.getComponents(parentInstance)) {
+        for (const component of this.getInstanceComponents(parentInstance)) {
             components[component.toString()] = component;
 
             for (const instance of this.getInstances(parentInstance, component)) {
@@ -261,8 +265,8 @@ export class ComponentRegistry {
         return components;
     }
 
-    private _parseParams(args: Array<string>, context: IComponentInstance, components: Array<IComponentDefinition>): Array<unknown> {
-        return args.map((param: string): unknown => {
+    private _parseParams(args: Array<keyof IComponentInstance>, context: IComponentInstance, components: Array<IComponentDefinition>): Array<unknown> {
+        return args.map((param: keyof IComponentInstance): unknown => {
             for (const c of components) {
                 if (c.name === param) {
                     return c;

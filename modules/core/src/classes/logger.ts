@@ -25,20 +25,22 @@ export class Logger {
 
         args.forEach((arg: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
             if (arg instanceof Error) {
-                console.error(arg); // eslint-disable-line no-console
+                console.error(arg);  
 
                 return;
             }
 
             let content = '';
 
+             
             if (typeof arg?.toString === 'function') {
+                 
                 content = arg.toString();
             } else {
                 content = JSON.stringify(arg);
             }
 
-            console.log(`[${LogLevel[level]}] ${content}`); // eslint-disable-line no-console
+            console.log(`[${LogLevel[level]}] ${content}`);  
         });
     }
 

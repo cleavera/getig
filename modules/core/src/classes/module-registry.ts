@@ -42,7 +42,7 @@ export class ModuleRegistry {
 
     public async generate(moduleInstance: IModuleInstance, basePath: string = process.cwd()): Promise<void> {
         if ((moduleInstance.beforeGenerate ?? null) !== null) {
-            LOGGER.silly(`Running beforeGenerate lifecycle hook for ${(moduleInstance as Object).constructor.name}`);
+            LOGGER.silly(`Running beforeGenerate lifecycle hook for ${(moduleInstance as object).constructor.name}`);
             await moduleInstance.beforeGenerate();
         }
 
@@ -56,7 +56,7 @@ export class ModuleRegistry {
 
         basePath = join(basePath, modulePath);
 
-        LOGGER.info(`Creating module ${(moduleInstance as Object).constructor.name} at ${basePath}`);
+        LOGGER.info(`Creating module ${(moduleInstance as object).constructor.name} at ${basePath}`);
 
         await fs.rm(basePath, {
             recursive: true,

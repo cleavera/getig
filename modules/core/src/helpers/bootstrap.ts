@@ -8,7 +8,7 @@ import { RESOURCE_STORE } from '../constants/resource-store.constant';
 import { IComponentDefinition } from '../interfaces/component-definition.interface';
 import { IResource } from '../interfaces/resource.interface';
 
-export async function $bootstrap(module: IComponentDefinition, basePath: string = process.cwd(), logLevel: LogLevel = LogLevel.WARN): Promise<void> {
+export async function bootstrap(module: IComponentDefinition, basePath: string = process.cwd(), logLevel: LogLevel = LogLevel.WARN): Promise<void> {
     LOGGER.configure(logLevel);
 
     await MODULE_REGISTRY.generate(new module(), basePath);
@@ -20,9 +20,11 @@ export async function $bootstrap(module: IComponentDefinition, basePath: string 
 
         await fs.mkdir(directory, {
             recursive: true
-        }).catch((error: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/use-unknown-in-catch-callback-variable, @typescript-eslint/no-explicit-any
+        }).catch((error: any) => {
+             
             if (error?.code !== 'EEXIST') {
-                return Promise.reject(error);
+                throw error;
             }
         });
 

@@ -7,7 +7,7 @@ export { RESOURCE_STORE } from './constants/resource-store.constant';
 export { Binding } from './decorators/binding';
 export { Component } from './decorators/component';
 export { Module } from './decorators/module';
-export { $bootstrap } from './helpers/bootstrap';
+export { bootstrap } from './helpers/bootstrap';
 export { IBeforeRender } from './interfaces/before-render.interface';
 export { IComponentDefinition } from './interfaces/component-definition.interface';
 export { IComponentInstance } from './interfaces/component-instance.interface';

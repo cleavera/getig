@@ -1,5 +1,5 @@
 import { Logger } from '@cleavera/debug';
-import { $bootstrap } from '@getig/core';
+import { bootstrap } from '@getig/core';
 import { join } from 'path';
 
 import { ROOT } from '../../root';
@@ -8,7 +8,7 @@ import { CoreModule } from './core.module';
 
 LOGGER.configure(Logger.LogLevel.SILLY);
 
-$bootstrap(CoreModule, join(ROOT, './dist')).then(() => {
+bootstrap(CoreModule, join(ROOT, './dist')).then(() => {
     LOGGER.info('Compilation completed');
 }, (e: Error) => {
     throw e;

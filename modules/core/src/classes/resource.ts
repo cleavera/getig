@@ -44,6 +44,7 @@ export class Resource implements IResource {
 
         const name: string = hash.digest('hex');
 
-        return new Resource(`/resources/${name}.${extension as string}`, convertedContent);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return new Resource(`/resources/${name}.${extension!}`, convertedContent);
     }
 }

@@ -26,7 +26,7 @@ export async function stringReplace(
         return str;
     }
 
-    let offset: number = 0;
+    let offset = 0;
 
     for (const match of matches) {
         const replacedValue: string = await replacer(match);

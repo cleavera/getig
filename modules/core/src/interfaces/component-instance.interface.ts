@@ -1,1 +1,7 @@
-export type IComponentInstance = any; // eslint-disable-line @typescript-eslint/no-explicit-any
+import { IComponentDefinition } from './component-definition.interface';
+
+export type IComponentInstance = object & {
+  constructor: IComponentDefinition;
+  onRender?: () => void | Promise<void>;
+  beforeRender?: () => void | Promise<void>;
+};
