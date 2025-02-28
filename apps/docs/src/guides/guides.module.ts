@@ -1,4 +1,4 @@
-import { IPage, Module, MODULE_REGISTRY } from '@getig/core';
+import { BeforeGenerate, IPage, Module, MODULE_REGISTRY } from '@getig/core';
 
 import { $generatePages } from '../shared';
 
@@ -7,6 +7,7 @@ import { $generatePages } from '../shared';
   pages: []
 })
 export class GuidesModule {
+  @BeforeGenerate()
   public async beforeGenerate(): Promise<void> {
     const pages: Array<IPage> = await $generatePages('guides');
 

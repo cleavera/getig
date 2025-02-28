@@ -1,13 +1,14 @@
-import { Binding, Component, COMPONENT_REGISTRY, IComponentDefinition, IComponentInstance, IOnRender, Resource, RESOURCE_STORE } from '@getig/core';
+import { Binding, Component, COMPONENT_REGISTRY, IComponentDefinition, IComponentInstance, OnRender, Resource, RESOURCE_STORE } from '@getig/core';
 
 @Component({
     template: '<script src="#{url}"></script>',
     isDependant: true
 })
-export class ScriptsComponent implements IOnRender {
+export class ScriptsComponent {
     @Binding()
     public url!: string;
 
+    @OnRender()
     public async onRender(): Promise<void> {
         const parent: IComponentInstance = COMPONENT_REGISTRY.getParent(this);
         const components: Array<IComponentDefinition> = COMPONENT_REGISTRY.getDescendants(parent);

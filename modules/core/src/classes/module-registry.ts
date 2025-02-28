@@ -10,133 +10,158 @@ import { IPage } from '../interfaces/page.interface';
 import { IResource } from '../interfaces/resource.interface';
 import { MetaData } from '../services/meta-data';
 
+interface ModuleMeta {
+  path: string | null;
+  pages: Array<IPage> | null;
+  children: Array<IModuleDefinition> | null;
+  beforeGenerateCallbacks: Array<string> | null;
+}
+
 export class ModuleRegistry {
-    private readonly _registry: MetaData;
+  private readonly _registry: MetaData<ModuleMeta>;
 
-    constructor() {
-        this._registry = new MetaData('Module meta data');
+  constructor() {
+    this._registry = new MetaData('Module meta data');
+  }
+
+  public register(
+    moduleDefinition: IModuleDefinition,
+    path: string,
+    pages: Array<IPage> = [],
+    children: Array<IModuleDefinition> = [],
+    resources: Array<IResource | Promise<IResource>> = []
+  ): void {
+    this.setPath(moduleDefinition, path);
+
+    resources.forEach((resource: IResource | Promise<IResource>): void => {
+      RESOURCE_STORE.addResource(resource);
+    });
+
+    pages.forEach((page: IPage): void => {
+      this.addPage(moduleDefinition, page);
+    });
+
+    children.forEach((child: IModuleDefinition): void => {
+      this.addChild(moduleDefinition, child);
+    });
+  }
+
+  public async generate(moduleInstance: IModuleInstance, basePath: string = process.cwd()): Promise<void> {
+    const beforeGenerateCallbacks: Array<string> = this.getBeforeGenerateCallbacks(moduleInstance.constructor);
+
+    if (beforeGenerateCallbacks.length > 0) {
+      LOGGER.silly(`Running beforeGenerate lifecycle hook for ${(moduleInstance as object).constructor.name}`);
+
+      await Promise.all(beforeGenerateCallbacks.map(async (propertyName: string) => {
+        await moduleInstance[propertyName]?.();
+      }));
     }
 
-    public register(
-        moduleDefinition: IModuleDefinition,
-        path: string,
-        pages: Array<IPage> = [],
-        children: Array<IModuleDefinition> = [],
-        resources: Array<IResource | Promise<IResource>> = []
-    ): void {
-        this.setPath(moduleDefinition, path);
+    const modulePath: string | null = this.getPath(moduleInstance.constructor);
 
-        resources.forEach((resource: IResource | Promise<IResource>): void => {
-            RESOURCE_STORE.addResource(resource);
-        });
+    if (modulePath === null) {
+      LOGGER.error(new Error(`Module needs a path ${JSON.stringify(moduleInstance)}`));
 
-        pages.forEach((page: IPage): void => {
-            this.addPage(moduleDefinition, page);
-        });
-
-        children.forEach((child: IModuleDefinition): void => {
-            this.addChild(moduleDefinition, child);
-        });
+      return process.exit(1);
     }
 
-    public async generate(moduleInstance: IModuleInstance, basePath: string = process.cwd()): Promise<void> {
-        if ((moduleInstance.beforeGenerate ?? null) !== null) {
-            LOGGER.silly(`Running beforeGenerate lifecycle hook for ${(moduleInstance as object).constructor.name}`);
-            await moduleInstance.beforeGenerate();
-        }
+    basePath = join(basePath, modulePath);
 
-        const modulePath: string | null = this.getPath(moduleInstance.constructor);
+    LOGGER.info(`Creating module ${(moduleInstance as object).constructor.name} at ${basePath}`);
 
-        if (modulePath === null) {
-            LOGGER.error(new Error(`Module needs a path ${JSON.stringify(moduleInstance)}`));
+    await fs.rm(basePath, {
+      recursive: true,
+      force: true
+    });
 
-            return process.exit(1);
-        }
+    await fs.mkdir(basePath, {
+      recursive: true
+    });
 
-        basePath = join(basePath, modulePath);
+    for (const page of this.getPages(moduleInstance)) {
+      const pagePath: string = join(basePath, page.fileName);
 
-        LOGGER.info(`Creating module ${(moduleInstance as object).constructor.name} at ${basePath}`);
+      LOGGER.info(`Creating page ${page.fileName} at ${pagePath}`);
 
-        await fs.rm(basePath, {
-            recursive: true,
-            force: true
-        });
-        await fs.mkdir(basePath, {
-            recursive: true
-        });
-
-        for (const page of this.getPages(moduleInstance)) {
-            const pagePath: string = join(basePath, page.fileName);
-
-            LOGGER.info(`Creating page ${page.fileName} at ${pagePath}`);
-
-            await fs.writeFile(pagePath, await COMPONENT_REGISTRY.render(page.component));
-        }
-
-        for (const child of this.getChildren(moduleInstance)) {
-            await this.generate(new child(), basePath);
-        }
+      await fs.writeFile(pagePath, await COMPONENT_REGISTRY.render(page.component));
     }
 
-    public setPath(moduleDefinition: IModuleDefinition, path: string): void {
-        this._registry.set(moduleDefinition, 'path', path);
+    for (const child of this.getChildren(moduleInstance)) {
+      await this.generate(new child(), basePath);
     }
+  }
 
-    public getPath(moduleDefinition: IModuleDefinition): string | null {
-        return this._registry.get(moduleDefinition, 'path');
-    }
+  public setPath(moduleDefinition: IModuleDefinition, path: string): void {
+    this._registry.set(moduleDefinition, 'path', path);
+  }
 
-    public addPage(moduleDefinition: IModuleDefinition, page: IPage): void {
-        const pages: Array<IPage> = this._registry.get(moduleDefinition, 'pages') ?? [];
+  public getPath(moduleDefinition: IModuleDefinition): string | null {
+    return this._registry.get(moduleDefinition, 'path');
+  }
 
-        pages.push(page);
+  public addBeforeGenerateCallback(moduleDefinition: IModuleDefinition, propertyName: string): void {
+    const beforeGenerates: Array<string> = this._registry.get(moduleDefinition, 'beforeGenerateCallbacks') ?? [];
 
-        this._registry.set(moduleDefinition, 'pages', pages);
+    beforeGenerates.push(propertyName);
 
-        page.resources.forEach((resource: Promise<IResource>): void => {
-            RESOURCE_STORE.addResource(resource);
-        });
-    }
+    this._registry.set(moduleDefinition, 'beforeGenerateCallbacks', beforeGenerates);
+  }
 
-    public addDynamicPage(moduleInstance: IModuleInstance, page: IPage): void {
-        const pages: Array<IPage> = this._registry.get(moduleInstance, 'pages') ?? [];
+  public getBeforeGenerateCallbacks(moduleDefinition: IModuleDefinition): Array<string> {
+    return this._registry.get(moduleDefinition, 'beforeGenerateCallbacks') ?? [];
+  }
 
-        pages.push(page);
+  public addPage(moduleDefinition: IModuleDefinition, page: IPage): void {
+    const pages: Array<IPage> = this._registry.get(moduleDefinition, 'pages') ?? [];
 
-        this._registry.set(moduleInstance, 'pages', pages);
+    pages.push(page);
 
-        page.resources.forEach((resource: Promise<IResource>): void => {
-            RESOURCE_STORE.addResource(resource);
-        });
-    }
+    this._registry.set(moduleDefinition, 'pages', pages);
 
-    public getPages(moduleInstance: IModuleInstance): Array<IPage> {
-        const staticPages: Array<IPage> = this._registry.get(moduleInstance.constructor, 'pages') ?? [];
-        const dynamicPages: Array<IPage> = this._registry.get(moduleInstance, 'pages') ?? [];
+    page.resources.forEach((resource: Promise<IResource>): void => {
+      RESOURCE_STORE.addResource(resource);
+    });
+  }
 
-        return staticPages.concat(dynamicPages);
-    }
+  public addDynamicPage(moduleInstance: IModuleInstance, page: IPage): void {
+    const pages: Array<IPage> = this._registry.get(moduleInstance, 'pages') ?? [];
 
-    public addChild(moduleDefinition: IModuleDefinition, child: IModuleDefinition): void {
-        const children: Array<IModuleDefinition> = this._registry.get(moduleDefinition, 'children') ?? [];
+    pages.push(page);
 
-        children.push(child);
+    this._registry.set(moduleInstance, 'pages', pages);
 
-        this._registry.set(moduleDefinition, 'children', children);
-    }
+    page.resources.forEach((resource: Promise<IResource>): void => {
+      RESOURCE_STORE.addResource(resource);
+    });
+  }
 
-    public addDynamicChild(moduleInstance: IModuleInstance, child: IModuleDefinition): void {
-        const children: Array<IModuleDefinition> = this._registry.get(moduleInstance, 'children') ?? [];
+  public getPages(moduleInstance: IModuleInstance): Array<IPage> {
+    const staticPages: Array<IPage> = this._registry.get(moduleInstance.constructor, 'pages') ?? [];
+    const dynamicPages: Array<IPage> = this._registry.get(moduleInstance, 'pages') ?? [];
 
-        children.push(child);
+    return staticPages.concat(dynamicPages);
+  }
 
-        this._registry.set(moduleInstance, 'children', children);
-    }
+  public addChild(moduleDefinition: IModuleDefinition, child: IModuleDefinition): void {
+    const children: Array<IModuleDefinition> = this._registry.get(moduleDefinition, 'children') ?? [];
 
-    public getChildren(moduleInstance: IModuleInstance): Array<IModuleDefinition> {
-        const staticChildren: Array<IModuleDefinition> = this._registry.get(moduleInstance.constructor, 'children') ?? [];
-        const dynamicChildren: Array<IModuleDefinition> = this._registry.get(moduleInstance, 'children') ?? [];
+    children.push(child);
 
-        return staticChildren.concat(dynamicChildren);
-    }
+    this._registry.set(moduleDefinition, 'children', children);
+  }
+
+  public addDynamicChild(moduleInstance: IModuleInstance, child: IModuleDefinition): void {
+    const children: Array<IModuleDefinition> = this._registry.get(moduleInstance, 'children') ?? [];
+
+    children.push(child);
+
+    this._registry.set(moduleInstance, 'children', children);
+  }
+
+  public getChildren(moduleInstance: IModuleInstance): Array<IModuleDefinition> {
+    const staticChildren: Array<IModuleDefinition> = this._registry.get(moduleInstance.constructor, 'children') ?? [];
+    const dynamicChildren: Array<IModuleDefinition> = this._registry.get(moduleInstance, 'children') ?? [];
+
+    return staticChildren.concat(dynamicChildren);
+  }
 }

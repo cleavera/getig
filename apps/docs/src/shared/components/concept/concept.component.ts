@@ -1,6 +1,6 @@
 import { $readFile } from '@cleavera/fs';
 import { $componentFactory, DynamicComponent } from '@getig/common';
-import { Binding, Component, COMPONENT_REGISTRY, IBeforeRender, IComponentDefinition } from '@getig/core';
+import { BeforeRender, Binding, Component, COMPONENT_REGISTRY, IComponentDefinition } from '@getig/core';
 import { join } from 'path';
 
 import { MarkdownComponent } from '../../components/markdown/markdown.component';
@@ -18,7 +18,7 @@ import { ModuleNavComponent } from '../module-nav/module-nav.component';
     DynamicComponent
   ]
 })
-export class ConceptComponent implements IBeforeRender {
+export class ConceptComponent {
   @Binding()
   public navigationComponent: IComponentDefinition;
 
@@ -41,6 +41,7 @@ export class ConceptComponent implements IBeforeRender {
     this._interpolatableComponents = interpolatableComponents;
   }
 
+  @BeforeRender()
   public async beforeRender(): Promise<void> {
     this.contentComponent = $componentFactory(MarkdownComponent, await this._interpolateComponents(this._markdown, this._interpolatableComponents), join(CONTENT_BASE_PATH, this._modulePath));
   }

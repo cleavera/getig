@@ -54,7 +54,7 @@
     <div class="Content">
     <div class="Markdown">
     <p>Modules are the large building blocks of getig sites. Every site must contain at least one and they can be nested as deep as needed. They are a way of separating and namespacing areas of your site, they will essentially create folders in the generated site. When you compile your site, its a module that you pass in as a starting point. Lets break down at an example module declaration.</p>
-<pre><code class="language-typescript">import { IBeforeGenerate, Module, Page, Resource } from '@getig/core';
+<pre><code class="language-typescript">import { BeforeGenerate, Module, Page, Resource } from '@getig/core';
 import { join } from 'path';
 import { DocsModule } from '../docs';
 import { ErrorComponent } from './components/error/error.component';
@@ -73,7 +73,8 @@ import { HomeComponent } from './components/home/home.component';
         Resource.FromFilePath(join(__dirname, './resources/favicon.ico'), './favicon.ico')
     ]
 })
-export class CoreModule implements IBeforeGenerate {
+export class CoreModule {
+    @BeforeGenerate()
     public beforeGenerate(): void { // 5. Before generate
         console.log('Generating');
     }
